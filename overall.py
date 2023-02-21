@@ -18,8 +18,8 @@ num_responses = len(df)
 improvement_effect = df["Improvement Efforts"].sum()
 
 # Average ratings
-avg_instructor_rating = df["Intructor Rating"].mean()
-avg_accessibility_rating = df["Accessibliity Rating"].mean()
+avg_instructor_rating = df["Instructor Rating"].mean()
+avg_accessibility_rating = df["Accessibility Rating"].mean()
 avg_navigation_rating = df["Navigation Rating"].mean()
 avg_rating = 4.76
 
@@ -28,6 +28,9 @@ col1, col2, col3 = st.columns(3)
 col1.metric("Number of form responses", num_responses)
 col2.metric("Improvement Efforts", improvement_effect)
 col3.metric("Average ratings", avg_rating)
+
+# Divider
+st.markdown('---')
 
 # Get unique event names
 event_names = df['Form Name'].unique().tolist()
@@ -42,7 +45,7 @@ filtered_df = df[df['Form Name'] == selected_event]
 st.write("### Rating Distributions")
 st.write("Distribution of ratings for Course Rating, Instructor Rating, and Accessibility Rating")
 histogram_cols = st.columns(3)
-for i, col in enumerate(["Course Rating", "Intructor Rating", "Accessibliity Rating"]):
+for i, col in enumerate(["Course Rating", "Instructor Rating", "Accessibility Rating"]):
     fig = px.histogram(filtered_df, x=col, nbins=10)
     with histogram_cols[i]:
         st.plotly_chart(fig, use_container_width=True)
