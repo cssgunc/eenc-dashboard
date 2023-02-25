@@ -18,7 +18,7 @@ num_responses = len(df)
 improvement_effect = df["Improvement Efforts"].sum()
 
 # Average ratings
-avg_instructor_rating = df["Intructor Rating"].mean()
+avg_instructor_rating = df["Instructor Rating"].mean()
 avg_accessibility_rating = df["Accessibliity Rating"].mean()
 avg_navigation_rating = df["Navigation Rating"].mean()
 avg_rating = 4.76
