@@ -45,9 +45,15 @@ st.header("\nGraphs & Trends")
 st.markdown('### Guidelines Before')
 
 value_counts = data['Guidelines Before'].value_counts()
+
+labels_order = ["Very Low", "Low", "Average", "High", "Very High"]
+
 fig, ax = plt.subplots()
 bar_color = primary_color
 ax.bar(value_counts.index, value_counts.values, color=bar_color)
+
+ax.set_xticklabels(labels_order)
+
 ax.set_title("Count of values in 'Guidelines Before' column")
 ax.set_xlabel('Guidelines Before')
 ax.set_ylabel("Count")
@@ -57,6 +63,7 @@ st.markdown('   ')
 st.markdown('### Guidelines After')
 
 value_counts = data['Guidelines After'].value_counts()
+labels_order = ["Very Low", "Low", "Average", "High", "Very High"]
 fig, ax = plt.subplots()
 ax.bar(value_counts.index, value_counts.values, color=bar_color)
 ax.set_title("Count of values in 'Guidelines After' column")
