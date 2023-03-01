@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import matplotlib.pyplot as plt
+import plotly.graph_objects as go
+
 
 # Load the data
 data = pd.read_csv("data/data.csv")
@@ -28,59 +30,92 @@ if form_name != 'All':
 if location != 'All':
     data = data[data['Online/In-Person'] == location]
 
-
-st.header("Metrics")
-# total number of respondents, course rating, average ratings
-col1, col2, col3, col4, col5 = st.columns(5)
+st.markdown('   ')
+col1, col2 = st.columns(2)
 col1.metric("Total Responses", len(data))
-col2.metric("Avg. Course", round(data['Course Rating'].mean(), 2))
-col3.metric("Avg. Instructor", round(data['Instructor Rating'].mean(), 2))
-col4.metric("Avg. Accessibility", round(data['Accessibility Rating'].mean(), 2))
-col5.metric("Avg. Navigation", round(data['Navigation Rating'].mean(), 2))
+col2.metric("Improvement Efforts", data["Improvement Efforts"].sum())
+st.markdown('   ')
 
+st.header("Ratings")
+# total number of respondents, course rating, average ratings
+# put some stuff that links to mel's rating page
+col1, col2, col3, col4 = st.columns(4)
+col1.metric("Avg. Course", round(data['Course Rating'].mean(), 2))
+col2.metric("Avg. Instructor", round(data['Instructor Rating'].mean(), 2))
+col3.metric("Avg. Accessibility", round(data['Accessibility Rating'].mean(), 2))
+col4.metric("Avg. Navigation", round(data['Navigation Rating'].mean(), 2))
+st.markdown('[Go to Rating page for more details!](#ratings)')
 
+st.markdown('   ')
 st.markdown('   ')
 st.header("\nGraphs & Trends")
 # Average knowledge gain, most popular classes, trends over time
+
+
 st.markdown('### Guidelines Before')
 
-value_counts = data['Guidelines Before'].value_counts()
+value_counts = data['Guidelines Before'].value_counts().reset_index()
+value_counts.columns = ['Guidelines Before', 'Count']
 
+# Define the order of the labels
 labels_order = ["Very Low", "Low", "Average", "High", "Very High"]
 
-fig, ax = plt.subplots()
-bar_color = primary_color
-ax.bar(value_counts.index, value_counts.values, color=bar_color)
+bar_color = secondary_color
 
-ax.set_xticklabels(labels_order)
+fig = px.bar(value_counts, x='Guidelines Before', y='Count', text='Count',
+             category_orders={'Guidelines Before': labels_order},
+             color_discrete_sequence=[bar_color])
+fig.update_traces(texttemplate='%{text}', textposition='auto')
 
-ax.set_title("Count of values in 'Guidelines Before' column")
-ax.set_xlabel('Guidelines Before')
-ax.set_ylabel("Count")
-st.pyplot(fig)
+fig.update_layout(title="Count of Values in 'Guidelines Before' Column", xaxis_title='Guidelines Before',
+                  yaxis_title='Count')
+
+st.plotly_chart(fig)
+
 
 st.markdown('   ')
+
 st.markdown('### Guidelines After')
 
-value_counts = data['Guidelines After'].value_counts()
-labels_order = ["Very Low", "Low", "Average", "High", "Very High"]
-fig, ax = plt.subplots()
-ax.bar(value_counts.index, value_counts.values, color=bar_color)
-ax.set_title("Count of values in 'Guidelines After' column")
-ax.set_xlabel('Guidelines After')
-ax.set_ylabel("Count")
-st.pyplot(fig)
+value_counts = data['Guidelines After'].value_counts().reset_index()
+value_counts.columns = ['Guidelines After', 'Count']
+
+# Define the order of the labels
+labels_order = ["Average", "High", "Very High"]
+
+bar_color = secondary_color
+
+fig = px.bar(value_counts, x='Guidelines After', y='Count', text='Count',
+             category_orders={'Guidelines After': labels_order},
+             color_discrete_sequence=[bar_color])
+fig.update_traces(texttemplate='%{text}', textposition='auto')
+
+fig.update_layout(title="Count of Values in 'Guidelines After' Column", xaxis_title='Guidelines After',
+                  yaxis_title='Count')
+
+st.plotly_chart(fig)
 
 st.markdown('   ')
+
 st.markdown('### Sharing Interest')
 
-value_counts = data['Sharing Interest'].value_counts()
-fig, ax = plt.subplots()
-ax.bar(value_counts.index, value_counts.values, color=bar_color)
-ax.set_title("Count of values in 'Sharing Interest' column")
-ax.set_xlabel('Sharing Interest')
-ax.set_ylabel("Count")
-st.pyplot(fig)
+value_counts = data['Sharing Interest'].value_counts().reset_index()
+value_counts.columns = ['Sharing Interest', 'Count']
+
+# Define the order of the labels
+labels_order = ["Average", "High", "Very High"]
+
+bar_color = secondary_color
+
+fig = px.bar(value_counts, x='Sharing Interest', y='Count', text='Count',
+             category_orders={'Sharing Interest': labels_order},
+             color_discrete_sequence=[bar_color])
+fig.update_traces(texttemplate='%{text}', textposition='auto')
+
+fig.update_layout(title="Count of Values in 'Sharing Interest' Column", xaxis_title='Sharing Interest',
+                  yaxis_title='Count')
+
+st.plotly_chart(fig)
 
 # Add CSS to customize text colors
 st.markdown(f"""
