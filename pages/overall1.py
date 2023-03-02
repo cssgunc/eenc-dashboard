@@ -44,7 +44,7 @@ col1.metric("Avg. Course", round(data['Course Rating'].mean(), 2))
 col2.metric("Avg. Instructor", round(data['Instructor Rating'].mean(), 2))
 col3.metric("Avg. Accessibility", round(data['Accessibility Rating'].mean(), 2))
 col4.metric("Avg. Navigation", round(data['Navigation Rating'].mean(), 2))
-st.markdown('[Go to Rating page for more details!](#ratings)')
+st.markdown('[Go to the Ratings page for more details!](/ratings)')
 
 st.markdown('   ')
 st.markdown('   ')
