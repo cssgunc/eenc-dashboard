@@ -1,6 +1,6 @@
 import pandas as pd
 import streamlit as st
-import altair as alt
+import plotly.express as px
 
 # Load the data
 data = pd.read_csv("data/data.csv")
@@ -60,11 +60,18 @@ def generate_rating_chart(column_name, chart_title):
     average_rating = round(column_data.mean(), 2)
     mode_rating = column_data.mode()[0]
     median_rating = column_data.median()
-    rating_hist = alt.Chart(data).mark_bar(color=SECONDARY_COLOR).encode(
-        alt.Y('count()', title='Count', axis=alt.Axis(grid=False)),
-        alt.X(f'{column_name}:Q', bin=alt.Bin(step=1), title='Rating', axis=alt.Axis(grid=False)),
-        tooltip=['count()', f'{column_name}']
+
+    fig = px.histogram(data, x=column_name, nbins=5, opacity=1, color_discrete_sequence=[SECONDARY_COLOR], height=350)
+
+    fig.update_layout(
+        xaxis_title="Rating",
+        yaxis_title="Count",
+        showlegend=False,
+        margin=dict(t=0, l=50, r=50, b=50),
+        plot_bgcolor="white",
+        paper_bgcolor="white",
     )
+
     st.subheader(chart_title)
     st.markdown("  ")
     with st.container():
@@ -74,7 +81,7 @@ def generate_rating_chart(column_name, chart_title):
             st.metric("Mode", mode_rating, delta_color='normal')
             st.metric("Median", median_rating, delta_color='normal')
         with col2:
-            st.altair_chart(rating_hist)
+            st.plotly_chart(fig, use_container_width=True)
 
 # Course Rating
 generate_rating_chart('Course Rating', 'How do you rate this course overall?')
