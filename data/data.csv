@@ -81,9 +81,10 @@ Online K-12,12/16/2021 15:12:05,4,Very Low,Average,4,High,5,4,4,Non-Formal Educa
 Online K-12,12/18/2021 17:25:54,5,Average,Very High,5,Very High,5,5,5,Program Director/Administrator,300,Mix of Areas,Online
 Online K-12,12/20/2021 13:20:45,4,Low,High,5,High,5,5,5,Non-Formal Educator,500,Mix of Areas,Online
 Online K-12,12/29/2021 16:23:38,5,Very High,Very High,4,Very High,5,5,4,Conservation/Natural Resources Professional,200,Mix of Areas,Online
-Online K-12,1/7/2022 11:01:40,4,Average,High,5,Very High,5,5,,Non-Formal Educator,2000,Rural,Online
+Online K-12,1/7/2022 11:01:40,4,Average,High,5,Very High,5,5,5,Non-Formal Educator,2000,Rural,Online
 Online K-12,1/10/2022 10:25:41,5,Low,High,5,High,5,5,5,Non-Formal Educator,600,Suburban,Online
 Online K-12,1/24/2022 11:31:53,5,Average,Very High,5,High,5,5,4,Non-Formal Educator,500,Rural,Online
+<<<<<<< Updated upstream
 In-Person General Guidelines,12/14/2022 11:49:56,4,12/14/2022 11:49:56,4,5,Strongly Agree,5,5,N/A,Non-Formal Educator,500,Rural,In-Person
 In-Person General Guidelines,12/14/2022 11:55:12,5,12/14/2022 11:55:12,5,5,Strongly Agree,5,5,N/A,"PreK-12 Classroom Teacher, Non-Formal Educator",3,Urban,In-Person
 In-Person General Guidelines,12/14/2022 12:00:26,5,12/14/2022 12:00:26,5,5,Strongly Agree,5,5,N/A,PreK-12 Classroom Teacher,165,Rural,In-Person
@@ -98,3 +99,19 @@ In-Person General Guidelines,1/24/2023 20:40:55,4,1/24/2023 20:40:55,4,4,Agree,5
 In-Person General Guidelines,1/25/2023 12:52:42,5,1/25/2023 12:52:42,5,4,Agree,5,5,N/A,University undergraduate student,0,Urban,In-Person
 In-Person General Guidelines,1/26/2023 18:36:01,5,1/26/2023 18:36:01,5,4,Agree,5,5,N/A,student,0,A Mix of Areas,In-Person
 In-Person General Guidelines,1/26/2023 19:38:33,5,1/26/2023 19:38:33,5,4,Agree,5,5,N/A,Environmental Education minor (college student),100,A Mix of Areas,In-Person
+=======
+In-Person General Guidelines,12/14/2022 11:49:56,4,Low,High,5,Very High,5,5,3,Non-Formal Educator,500,Rural,In-Person
+In-Person General Guidelines,12/14/2022 11:55:12,5,Very Low,Very High,5,Very High,5,5,3,"PreK-12 Classroom Teacher, Non-Formal Educator",3,Urban,In-Person
+In-Person General Guidelines,12/14/2022 12:00:26,5,Average,Very High,5,Very High,5,5,3,PreK-12 Classroom Teacher,165,Rural,In-Person
+In-Person General Guidelines,12/14/2022 11:58:47,5,Low,Very High,5,Very High,5,5,3,Conservation/Natural Resources Professional,n/a,A Mix of Areas,In-Person
+In-Person General Guidelines,12/14/2022 12:04:23,4,Very High,High,5,Very High,4,5,3,Non-Formal Educator,500,A Mix of Areas,In-Person
+In-Person General Guidelines,12/14/2022 12:47:30,5,Average,Very High,5,Very High,5,5,3,PreK-12 Classroom Teacher,750,Suburban,In-Person
+In-Person General Guidelines,12/14/2022 12:50:43,5,Low,Very High,5,Very High,5,5,3,PreK-12 Classroom Teacher,n/a,Rural,In-Person
+In-Person General Guidelines,12/14/2022 12:54:16,5,Average,Very High,5,Very High,5,5,3,Non-Formal Educator,"10,000",A Mix of Areas,In-Person
+In-Person General Guidelines,1/24/2023 14:59:06,5,Low,Very High,4,High,5,5,3,Student,0,A Mix of Areas,In-Person
+In-Person General Guidelines,1/24/2023 17:53:28,5,Very Low,Very High,5,Very High,5,5,3,Student,N/A,Urban,In-Person
+In-Person General Guidelines,1/24/2023 20:40:55,4,Average,High,4,High,5,4,3,College student,1000+,A Mix of Areas,In-Person
+In-Person General Guidelines,1/25/2023 12:52:42,5,Low,Very High,4,High,5,5,3,University undergraduate student,0,Urban,In-Person
+In-Person General Guidelines,1/26/2023 18:36:01,5,Very High,Very High,4,High,5,5,3,student,0,A Mix of Areas,In-Person
+In-Person General Guidelines,1/26/2023 19:38:33,5,Average,Very High,4,High,5,5,3,Environmental Education minor (college student),100,A Mix of Areas,In-Person
+>>>>>>> Stashed changes

@@ -104,4 +104,3 @@ generate_rating_chart('Sharing Interest', 'How interested are you in sharing wha
 
 
 st.markdown('    ')
-st.markdown("Made with :heart: by UNC CS+SG team")
