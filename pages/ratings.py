@@ -5,7 +5,6 @@ import altair as alt
 
 # Load the data
 data = pd.read_csv("data/data.csv")
-st.markdown('<div id="ratings"></div>', unsafe_allow_html=True)
 
 # put logo on sidebar
 st.image("assets/EENC-logo.png", width=100)

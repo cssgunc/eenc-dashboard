@@ -1,9 +1,6 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import matplotlib.pyplot as plt
-import plotly.graph_objects as go
-
 
 # Load the data
 data = pd.read_csv("data/data.csv")
@@ -33,7 +30,7 @@ if location != 'All':
 st.markdown('   ')
 col1, col2 = st.columns(2)
 col1.metric("Total Responses", len(data))
-col2.metric("Improvement Efforts", data["Improvement Efforts"].sum())
+col2.metric("Improvement Efforts", round(data["Improvement Efforts"].mean(), 2))
 st.markdown('   ')
 
 st.header("Ratings")
@@ -44,6 +41,8 @@ col1.metric("Avg. Course", round(data['Course Rating'].mean(), 2))
 col2.metric("Avg. Instructor", round(data['Instructor Rating'].mean(), 2))
 col3.metric("Avg. Accessibility", round(data['Accessibility Rating'].mean(), 2))
 col4.metric("Avg. Navigation", round(data['Navigation Rating'].mean(), 2))
+
+#TODO convert this hyperlink into a button for the ratings page
 st.markdown('[Go to the Ratings page for more details!](/ratings)')
 
 st.markdown('   ')
@@ -95,6 +94,10 @@ fig.update_layout(title="Count of Values in 'Guidelines After' Column", xaxis_ti
 
 st.plotly_chart(fig)
 
+# TODO
+# here, figure out how to convert guidelines before and after to int values (very low = 1, very high = 5)
+# then find average guidelines before, guidelines after, and knowledge increase
+
 st.markdown('   ')
 
 st.markdown('### Sharing Interest')
@@ -131,3 +134,4 @@ st.markdown(f"""
         }}
     </style>
 """, unsafe_allow_html=True)
+
