@@ -32,17 +32,6 @@ if form_name == "All":
 else:
     location = "All"
 
-# Reset button
-if st.sidebar.button("Reset Filters"):
-    form_name = 'All'
-    location = 'All'
-    data = pd.read_csv("data/data.csv")
-
-    # map the string values to numerical values
-    data['Sharing Interest'] = data['Sharing Interest'].map(mapping)
-
-    st.experimental_rerun()
-
 
 # Filter the data
 if form_name != 'All':
@@ -101,6 +90,3 @@ generate_rating_chart('Improvement Efforts', 'How satisfied are you with the imp
 # Sharing Interest Rating
 generate_rating_chart('Sharing Interest', 'How interested are you in sharing what you learned with others?')
 
-
-st.markdown('    ')
-st.markdown("Made with :heart: by UNC CS+SG team")
