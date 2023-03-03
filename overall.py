@@ -48,7 +48,7 @@ col2.metric("Avg. Instructor", round(data['Instructor Rating'].mean(), 2))
 col3.metric("Avg. Accessibility", round(data['Accessibility Rating'].mean(), 2))
 col4.metric("Avg. Navigation", round(data['Navigation Rating'].mean(), 2))
 
-# Rating currently links to streamlit page, waiting to link to official URL
+# Rating currently links to streamlit page, waiting to link to official URL.
 if st.button('Go to Ratings Page'):
     js = "window.open('https://www.streamlit.io/')"  # New tab or window
     js = "window.location.href = 'https://www.streamlit.io/'"  # Current tab
