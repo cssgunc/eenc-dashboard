@@ -15,7 +15,7 @@ data = pd.read_csv("data/data.csv")
 st.image("assets/EENC-logo.png", width=100)
 
 st.title("Welcome to the EENC dashboard!")
-st.markdown("This page displays overall information for the EENC courses. Use the filters on the left to customize the results")
+st.markdown("This page displays overall information for the EENC courses. Use the filters on the left to customize the results.")
 st.markdown('   ')
 
 primary_color = "#195E4C"
