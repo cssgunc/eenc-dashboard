@@ -39,7 +39,18 @@ col1.metric("Total Responses", len(data))
 col2.metric("Improvement Efforts", data["Improvement Efforts"].sum())
 st.markdown('   ')
 
-st.header("Ratings")
+
+c1, c2 = st.columns((7,3))
+with c1:
+    st.header("Ratings")
+with c2:
+    if st.button('Go to Ratings Page'):
+        js = "window.open('https://www.streamlit.io/')"  # New tab or window
+        js = "window.location.href = 'https://www.streamlit.io/'"  # Current tab
+        html = '<img src onerror="{}">'.format(js)
+        div = Div(text=html)
+        st.bokeh_chart(div)
+
 # total number of respondents, course rating, average ratings
 # put some stuff that links to mel's rating page
 col1, col2, col3, col4 = st.columns(4)
@@ -47,14 +58,6 @@ col1.metric("Avg. Course", round(data['Course Rating'].mean(), 2))
 col2.metric("Avg. Instructor", round(data['Instructor Rating'].mean(), 2))
 col3.metric("Avg. Accessibility", round(data['Accessibility Rating'].mean(), 2))
 col4.metric("Avg. Navigation", round(data['Navigation Rating'].mean(), 2))
-
-# Rating currently links to streamlit page, waiting to link to official URL.
-if st.button('Go to Ratings Page'):
-    js = "window.open('https://www.streamlit.io/')"  # New tab or window
-    js = "window.location.href = 'https://www.streamlit.io/'"  # Current tab
-    html = '<img src onerror="{}">'.format(js)
-    div = Div(text=html)
-    st.bokeh_chart(div)
 
 
 st.markdown('   ')
@@ -78,7 +81,7 @@ fig = px.bar(value_counts, x='Guidelines Before', y='Count', text='Count',
              color_discrete_sequence=[bar_color])
 fig.update_traces(texttemplate='%{text}', textposition='auto')
 
-fig.update_layout(title="Count of Values in 'Guidelines Before' Column", xaxis_title='Guidelines Before',
+fig.update_layout(xaxis_title='Guidelines Before',
                   yaxis_title='Count')
 
 st.plotly_chart(fig)
@@ -101,7 +104,7 @@ fig = px.bar(value_counts, x='Guidelines After', y='Count', text='Count',
              color_discrete_sequence=[bar_color])
 fig.update_traces(texttemplate='%{text}', textposition='auto')
 
-fig.update_layout(title="Count of Values in 'Guidelines After' Column", xaxis_title='Guidelines After',
+fig.update_layout(xaxis_title='Guidelines After',
                   yaxis_title='Count')
 
 st.plotly_chart(fig)
@@ -123,7 +126,7 @@ fig = px.bar(value_counts, x='Sharing Interest', y='Count', text='Count',
              color_discrete_sequence=[bar_color])
 fig.update_traces(texttemplate='%{text}', textposition='auto')
 
-fig.update_layout(title="Count of Values in 'Sharing Interest' Column", xaxis_title='Sharing Interest',
+fig.update_layout(xaxis_title='Sharing Interest',
                   yaxis_title='Count')
 
 st.plotly_chart(fig)
