@@ -5,9 +5,8 @@ import plotly.express as px
 # Load the data
 data = pd.read_csv("data/data.csv")
 
-<<<<<<< HEAD
 # put logo on sidebar
-=======
+
 # create a dictionary that maps string values to numerical values
 mapping = {'Very Low': 1, 'Low': 2, 'Average': 3, 'High': 4, 'Very High': 5}
 
@@ -23,7 +22,6 @@ TEXT_COLOR = "#6D7183"
 st.set_page_config(page_title="Ratings", page_icon="assets/EENC-logo.png", layout="wide")
 
 # Logo
->>>>>>> 8fa44060579d9d0dd6f156ca93373fdbc674cd42
 st.image("assets/EENC-logo.png", width=100)
 
 # Sidebar

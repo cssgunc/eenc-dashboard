@@ -14,9 +14,9 @@ data = pd.read_csv("data/data.csv")
 # logo
 st.image("assets/EENC-logo.png", width=100)
 
-st.title("Welcome to the EENC dashboard!")
+st.title("Welcome to the EENC dashboard")
 st.markdown("This page displays overall information for the EENC courses. Use the filters on the left to customize the results.")
-st.markdown('   ')
+st.markdown('---')
 
 primary_color = "#195E4C"
 secondary_color = "#3C9E8D"
@@ -25,7 +25,12 @@ text_color = "#6D7183"
 # Sidebar
 st.sidebar.title("Filters")
 form_name = st.sidebar.selectbox("Form Name", ['All'] + sorted(data['Form Name'].unique()))
-location = st.sidebar.radio("Location", ['All', 'Online', 'In-Person'])
+# Show location filter only when "All" is selected in "Form Name"
+if form_name == "All":
+    location = st.sidebar.radio("Select Location", ['All', 'Online', 'In-Person'])
+else:
+    location = "All"
+
 
 # Filter the data
 if form_name != 'All':
