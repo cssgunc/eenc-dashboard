@@ -58,7 +58,7 @@ def generate_rating_chart(column_name, chart_title):
         xaxis_title="Rating",
         yaxis_title="Count",
         showlegend=False,
-        margin=dict(t=0, l=50, r=50, b=50),
+        margin=dict(t=0),
         plot_bgcolor="white",
         paper_bgcolor="white",
     )
@@ -75,20 +75,43 @@ def generate_rating_chart(column_name, chart_title):
             st.plotly_chart(fig, use_container_width=True)
 
 # Course Rating
-generate_rating_chart('Course Rating', 'How do you rate this course overall?')
+generate_rating_chart('Course Rating', 'On a scale of 1 to 5, how do you rate this course overall?')
 
 # Instructor Rating
-generate_rating_chart('Instructor Rating', 'How do you rate the instructor of this course?')
+generate_rating_chart('Instructor Rating', 'On a scale of 1 to 5, how do you rate the instructor of this course?')
 
 # Accessibility Rating
 generate_rating_chart('Accessibility Rating', 'How accessible do you find this course?')
 
 # Navigation Rating
-generate_rating_chart('Navigation Rating', 'How easy was it to navigate this course?')
+generate_rating_chart('Navigation Rating', 'On a scale of 1 to 5, how easy was it to navigate this course?')
 
 # Improvement Efforts Rating
-generate_rating_chart('Improvement Efforts', 'How satisfied are you with the improvement efforts made after feedback?')
+generate_rating_chart('Improvement Efforts', 'On a scale of 1 to 5, how satisfied are you with the improvement efforts made after feedback?')
 
 # Sharing Interest Rating
-generate_rating_chart('Sharing Interest', 'How interested are you in sharing what you learned with others?')
+generate_rating_chart('Sharing Interest', 'On a scale of 1 to 5, how interested are you in sharing what you learned with others?')
 
+# Add CSS to customize text colors
+st.markdown(f"""
+    <style>
+        div.css-edivx2.e16fv1kl3 {{
+            color: {SECONDARY_COLOR};
+        }}
+        p {{
+            color: {TEXT_COLOR};
+        }}
+        h1, h2, h3, h4, h5, h6 {{
+            color: {PRIMARY_COLOR};
+        }}
+    </style>
+""", unsafe_allow_html=True)
+
+# Hide footer and menu
+hide_default_format = """
+       <style>
+       #MainMenu {visibility: hidden; }
+       footer {visibility: hidden;}
+       </style>
+       """
+st.markdown(hide_default_format, unsafe_allow_html=True)
