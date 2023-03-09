@@ -6,6 +6,9 @@ import matplotlib.pyplot as plt
 
 data = pd.read_csv("data/data.csv")
 
+# set logo and page name
+st.set_page_config(page_title="Guidelines", page_icon="assets/EENC-logo.png", layout="wide")
+
 st.image("assets/EENC-logo.png", width = 100)
 
 # sidebar
@@ -132,3 +135,12 @@ st.markdown(f"""
         }}
     </style>
 """, unsafe_allow_html=True)
+
+# Hide footer and menu
+hide_default_format = """
+       <style>
+       #MainMenu {visibility: hidden; }
+       footer {visibility: hidden;}
+       </style>
+       """
+st.markdown(hide_default_format, unsafe_allow_html=True)
