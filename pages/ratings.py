@@ -41,6 +41,9 @@ if form_name != 'All':
 if location != 'All':
     data = data[data['Online/In-Person'] == location]
 
+# Download data
+st.download_button(label="Download CSV", data=href, file_name=filename)
+
 # Main content
 st.title("EENC Ratings Summary")
 st.markdown("This page displays a summary of ratings for EENC courses. Use the filters on the left to customize the results.")
