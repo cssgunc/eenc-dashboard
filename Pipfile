@@ -5,6 +5,10 @@ name = "pypi"
 
 [packages]
 streamlit = "*"
+streamlit_extras = "*"
+plotly = "*"
+pandas = "*"
+google-cloud-firestore = "*"
 
 [dev-packages]
 
