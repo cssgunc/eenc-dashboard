@@ -9,6 +9,8 @@ streamlit_extras = "*"
 plotly = "*"
 pandas = "*"
 google-cloud-firestore = "*"
+bokeh = "*"
+
 
 [dev-packages]
 
