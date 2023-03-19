@@ -12,7 +12,9 @@ st.image("assets/EENC-logo.png", width=100)
 primary_color = '#195E4C'
 secondary_color = '#3C9E8D'
 text_color = '#6D7183'
-bar_colors = ['#3C9E8D', '#4AE19C', '#4FF57E', '#4AE14D', '#88F956', '#DBFA59', '#F4F281']
+#bar_colors = ['#3C9E8D', '#4AE19C', '#4FF57E', '#4AE14D', '#88F956', '#DBFA59', '#F4F281']
+bar_colors = ['#3C9E8D', '#4AC14D', '#4AE19C', '#4FF57E', '#45F7EB', '#42DBED', '#42B6ED']
+other_bar_colors = ['#42B6ED', '#42DBED', '#45F7DA', '#4AE19C', '#3C9E8D']
 
 # Add a title to the app
 st.title('Demographics for the EENC Dashboard')
@@ -20,12 +22,12 @@ st.markdown('A visualization of different statistics relating to the demographic
 
 #Sidebar
 st.sidebar.title("Filters")
-#form_name = st.sidebar.selectbox("Form Name", ['All'] + sorted(data['Form Name'].unique()))
+form_name = st.sidebar.selectbox("Form Name", ['All'] + sorted(data['Form Name'].unique()))
 location = st.sidebar.radio("Location", ['All', 'Online', 'In-Person'])
 
 #Filter the Data
-#if form_name != "All":
-    #data = data[data['Form Name'] == form_name]
+if form_name != "All":
+    data = data[data['Form Name'] == form_name]
 if location != "All":
     data = data[data['Online/In-Person'] == location]
 
@@ -88,18 +90,21 @@ bar_color = secondary_color
 st.header('Statistics for Instructor Professions')
 professions_bar_fig = px.bar(x=all_professions, y=professions_percentages, labels=dict(x='Professions', y='Percentage (out of Total Instructors)'), color_discrete_sequence=[bar_color])
 professions_bar_fig.update_yaxes(range=[0,100])
-st.subheader('Distribution of Instructor Professions by Percentage')
-st.plotly_chart(professions_bar_fig)
-st.caption("This bar graph depicts the percentage of instructors in each profession.")
-st.caption("Due to potential overlap, percentages may add up to greater than 100%.")
 
 professions_pie_fig = px.pie(values=professions_numbers, names=all_professions, color_discrete_sequence=bar_colors)
-professions_pie_fig.update_traces(textinfo='value')
-professions_pie_fig.update_traces(sort=False)
-st.subheader('Distribution of Instructor Professions by Frequency')
-st.plotly_chart(professions_pie_fig)
-st.caption("This pie chart depicts the number of instructors in each profession.")
-st.caption("Due to potential overlap, the numbers on the pie chart might be greater than the total number of instructors.")
+professions_pie_fig.update_traces(textinfo='value',hoverinfo='name',sort=False)
+professions_pie_fig.update_layout(legend=dict(yanchor="top", y=-0.05, xanchor="left", x=0.01))
+
+st.subheader('Distribution of Instructor Professions:')
+col1, col2 = st.columns(2, gap="large")
+col1.subheader('by Percentage')
+col1.caption("This bar graph depicts the percentage of instructors in each profession.")
+col1.caption("Due to potential overlap, percentages may add up to greater than 100%.")
+col1.plotly_chart(professions_bar_fig,use_container_width=True)
+col2.subheader('by Frequency')
+col2.caption("This pie chart depicts the number of instructors in each profession.")
+col2.caption("Due to potential overlap, the numbers on the pie chart might be greater than the total number of instructors.")
+col2.plotly_chart(professions_pie_fig,use_container_width=True)
 
 #student count for each teacher
 data['Student Count'] = pd.to_numeric(data['Student Count'], errors="coerce")
@@ -119,12 +124,14 @@ col2.metric("Largest student count", data['Student Count'].max())
 data['Instructor Rating'] = data['Instructor Rating'].astype(int)
 course_rating = data['Instructor Rating']
 student_count_to_course_rating_fig = px.scatter(x=student_count, y=course_rating, labels=dict(x='Student Count',y='Instructor Rating'), color_discrete_sequence=[bar_color])
-student_count_to_course_rating_fig.update_xaxes(range=[-100,4000])
-student_count_to_course_rating_fig.update_yaxes(range=[0,6])
+student_count_to_course_rating_fig.update_xaxes(range=[-100,3200])
+student_count_to_course_rating_fig.update_yaxes(range=[0,5.2])
+student_count_to_course_rating_fig.update_traces(marker=dict(size=12, line=dict(width=1.5, color='Black')), selector=dict(mode='markers'))
 st.subheader('Correlation between Student-to-Instructor Ratio and Instructor Rating')
-st.plotly_chart(student_count_to_course_rating_fig)
 st.caption("This scatterplot depicts how instructor ratings correspond to an instructor's student-to-instructor ratio, in order to determine how an instructor's abilities are affected by higher student counts.")
 st.caption('Please note that some outlier values are not depicted on the graph for better visibility.')
+st.plotly_chart(student_count_to_course_rating_fig)
+
 
 #relation between location and course rating
 rural_student_count = data[data['Student Location']=='Rural']['Student Count']
@@ -138,44 +145,40 @@ average_mix_student_count = round(mix_student_count.mean(), 2)
 
 student_location = data['Student Location']
 student_location = student_location.replace("A Mix of Areas", "Mix of Areas")
-student_location_to_course_rating_fig = px.strip(x=student_location, y=course_rating, color_discrete_sequence=[bar_color], labels=dict(x='Student Location',y='Instructor Rating'))
-student_location_to_course_rating_fig.update_yaxes(range=[0,5.4])
 
 st.header('Statistics for Student Location')
-st.caption('Number of instructors by student location')
-col1, col2, col3, col4 = st.columns(4)
-col1.metric("Mix of Areas", len(mix_student_count))
-col2.metric("Rural Areas", len(rural_student_count))
-col3.metric("Suburban Areas", len(suburban_student_count))
-col4.metric("Urban Areas", len(urban_student_count))
-st.caption('Average student count by student location')
-col1, col2, col3, col4 = st.columns(4)
-col1.metric("Mix of Areas", average_mix_student_count)
-col2.metric("Rural Areas", average_rural_student_count)
-col3.metric("Suburban Areas", average_suburban_student_count)
-col4.metric("Urban Areas", average_urban_student_count)
-st.caption('Median student count by student location')
-col1, col2, col3, col4 = st.columns(4)
-col1.metric("Mix of Areas", mix_student_count.median())
-col2.metric("Rural Areas", rural_student_count.median())
-col3.metric("Suburban Areas", suburban_student_count.median())
-col4.metric("Urban Areas", urban_student_count.median())
-st.caption('Smallest student count by student location')
-col1, col2, col3, col4 = st.columns(4)
-col1.metric("Mix of Areas", mix_student_count.min())
-col2.metric("Rural Areas", rural_student_count.min())
-col3.metric("Suburban Areas", suburban_student_count.min())
-col4.metric("Urban Areas", urban_student_count.min())
-st.caption('Largest student count by student location')
-col1, col2, col3, col4 = st.columns(4)
-col1.metric("Mix of Areas", mix_student_count.max())
-col2.metric("Rural Areas", rural_student_count.max())
-col3.metric("Suburban Areas", suburban_student_count.max())
-col4.metric("Urban Areas", urban_student_count.max())
 
+measures = {
+    'Location':['Mix of Areas', 'Rural', 'Suburban', 'Urban'],
+    'Number of instructors':[len(mix_student_count), len(rural_student_count), len(suburban_student_count), len(urban_student_count)],
+    'Average student count':[average_mix_student_count, average_rural_student_count, average_suburban_student_count, average_urban_student_count],
+    'Median student count':[mix_student_count.median(), rural_student_count.median(), suburban_student_count.median(), urban_student_count.median()],
+    'Smallest student count':[mix_student_count.min(), rural_student_count.min(), suburban_student_count.min(), urban_student_count.min()],
+    'Largest student count':[mix_student_count.max(), rural_student_count.max(), suburban_student_count.max(), urban_student_count.max()]
+}
+measures_frame = pd.DataFrame(data=measures)
+st.table(measures_frame.style.format({'Average student count': "{:.2f}", 'Median student count': "{:.2f}", 'Smallest student count': "{:.2f}", 'Largest student count': "{:.2f}"}))
+
+rural_course_rating = data[data['Student Location']=='Rural']['Instructor Rating']
+suburban_course_rating = data[data['Student Location']=='Suburban']['Instructor Rating']
+urban_course_rating = data[data['Student Location']=='Urban']['Instructor Rating']
+mix_course_rating = data[data['Student Location'].str.contains('Mix of Areas')]['Instructor Rating']
+
+location_ratings = {
+    'Student Location':['Mix of Areas', 'Rural', 'Suburban', 'Urban'],
+    '1':[round((mix_course_rating==1).sum()/len(mix_course_rating), 4) * 100, round((rural_course_rating==1).sum()/len(rural_course_rating), 4) * 100, round((suburban_course_rating==1).sum()/len(suburban_course_rating), 4) * 100, round((urban_course_rating==1).sum()/len(urban_course_rating), 4) * 100],
+    '2':[round((mix_course_rating==2).sum()/len(mix_course_rating), 4) * 100, round((rural_course_rating==2).sum()/len(rural_course_rating), 4) * 100, round((suburban_course_rating==2).sum()/len(suburban_course_rating), 4) * 100, round((urban_course_rating==2).sum()/len(urban_course_rating), 4) * 100],
+    '3':[round((mix_course_rating==3).sum()/len(mix_course_rating), 4) * 100, round((rural_course_rating==3).sum()/len(rural_course_rating), 4) * 100, round((suburban_course_rating==3).sum()/len(suburban_course_rating), 4) * 100, round((urban_course_rating==3).sum()/len(urban_course_rating), 4) * 100],
+    '4':[round((mix_course_rating==4).sum()/len(mix_course_rating), 4) * 100, round((rural_course_rating==4).sum()/len(rural_course_rating), 4) * 100, round((suburban_course_rating==4).sum()/len(suburban_course_rating), 4) * 100, round((urban_course_rating==4).sum()/len(urban_course_rating), 4) * 100],
+    '5':[round((mix_course_rating==5).sum()/len(mix_course_rating), 4) * 100, round((rural_course_rating==5).sum()/len(rural_course_rating), 4) * 100, round((suburban_course_rating==5).sum()/len(suburban_course_rating), 4) * 100, round((urban_course_rating==5).sum()/len(urban_course_rating), 4) * 100]
+}
+
+location_ratings_frame = pd.DataFrame(data=location_ratings)
+location_to_rating_bar_fig = px.bar(data_frame=location_ratings_frame, x='Student Location', y=['1', '2', '3', '4', '5'], color_discrete_sequence=other_bar_colors, text_auto=True)
+location_to_rating_bar_fig.update_layout(legend_title_text='Instructor Rating', yaxis_title='Percentage of Ratings')
 st.subheader('Correlation between Student Location and Instructor Rating')
-st.plotly_chart(student_location_to_course_rating_fig)
-st.caption('This strip plot depicts how instructor ratings differ based on student location. The longer the strip, the higher the number of instructor ratings at that rating value are for a given area.')
+st.caption('This segemented bar graph depicts how instructor ratings differ based on student location. Each bar segment represents the percentage of each rating value for the area, with all of the segments for each bar adding to 100%.')
+st.plotly_chart(location_to_rating_bar_fig)
 
 # Add CSS to customize text colors
 st.markdown(f"""
