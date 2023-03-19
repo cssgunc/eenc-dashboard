@@ -2,6 +2,9 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
+# Set page title and favicon
+st.set_page_config(page_title="Demographics", page_icon="assets/EENC-logo.png", layout="wide")
+
 # Load the data
 data = pd.read_csv("data/data.csv")
 
@@ -19,11 +22,16 @@ other_bar_colors = ['#42B6ED', '#42DBED', '#45F7DA', '#4AE19C', '#3C9E8D']
 # Add a title to the app
 st.title('Demographics for the EENC Dashboard')
 st.markdown('A visualization of different statistics relating to the demographics of EENC.')
-
+st.markdown("---")
 #Sidebar
 st.sidebar.title("Filters")
 form_name = st.sidebar.selectbox("Form Name", ['All'] + sorted(data['Form Name'].unique()))
-location = st.sidebar.radio("Location", ['All', 'Online', 'In-Person'])
+
+# Show location filter only when "All" is selected in "Form Name"
+if form_name == "All":
+    location = st.sidebar.radio("Location", ['All', 'Online', 'In-Person'])
+else:
+    location = "All"
 
 #Filter the Data
 if form_name != "All":
@@ -87,7 +95,7 @@ professions_numbers = [
 
 bar_color = secondary_color
 
-st.header('Statistics for Instructor Professions')
+st.header('Distribution of Instructor Professions')
 professions_bar_fig = px.bar(x=all_professions, y=professions_percentages, labels=dict(x='Professions', y='Percentage (out of Total Instructors)'), color_discrete_sequence=[bar_color])
 professions_bar_fig.update_yaxes(range=[0,100])
 
@@ -95,7 +103,6 @@ professions_pie_fig = px.pie(values=professions_numbers, names=all_professions, 
 professions_pie_fig.update_traces(textinfo='value',hoverinfo='name',sort=False)
 professions_pie_fig.update_layout(legend=dict(yanchor="top", y=-0.05, xanchor="left", x=0.01))
 
-st.subheader('Distribution of Instructor Professions:')
 col1, col2 = st.columns(2, gap="large")
 col1.subheader('by Percentage')
 col1.caption("This bar graph depicts the percentage of instructors in each profession.")
