@@ -1,14 +1,17 @@
 import streamlit as st
 from google.cloud import firestore
+from google.oauth2 import service_account
 import json
 
 
-key_dict = json.loads(st.secrets["textkey"])
+# Authenticate to Firestore with the JSON account key.
+key_dict = json.loads(st.secrets['textkey'])
 creds = service_account.Credentials.from_service_account_info(key_dict)
-db = firestore.Client(credentials=creds, project="eenc")
+db = firestore.Client(credentials=creds)
 
-doc_ref = db.collection("master_data").document("row1")
+# Create a reference to the Google post.
+doc_ref = db.collection('master_data').document("row1")
 
 doc = doc_ref.get()
 
-st.write("Test accessibility_rating:" + doc.accessibility_rating)
+print(doc)
