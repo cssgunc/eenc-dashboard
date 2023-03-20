@@ -1,9 +1,10 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+from plotly.subplots import make_subplots
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
-# may need to import Bokeh Div again in order to open new pages
+from bokeh.models.widgets import Div
 
 # Set page title and favicon
 st.set_page_config(page_title="Homepage", page_icon="assets/EENC-logo.png", layout="wide")
@@ -47,14 +48,20 @@ guidelines_scale = {"Very Low": 1, "Low": 2, "Average": 3, "High": 4, "Very High
 counts_before = guidelines_before.value_counts().reindex(["Very Low", "Low", "Average", "High", "Very High"])
 counts_after = guidelines_after.value_counts().reindex(["Very Low", "Low", "Average", "High", "Very High"])
 total_students = len(guidelines_after)
+perc_vlow_before = 100*(counts_before["Very Low"]/total_students)
+perc_vlow_after = 100*(counts_after["Very Low"]/total_students)
+perc_low_before = 100*(counts_before["Low"]/total_students)
+perc_low_after = 100*(counts_after["Low"]/total_students)
+perc_avg_before = 100*(counts_before["Average"]/total_students)
+perc_avg_after = 100*(counts_after["Average"]/total_students)
 perc_high_before = 100*(counts_before["High"]/total_students)
 perc_high_after = 100*(counts_after["High"]/total_students)
 perc_vhigh_before = 100*(counts_before["Very High"]/total_students)
 perc_vhigh_after = 100*(counts_after["Very High"]/total_students)
 
 
-
-
+st.markdown('   ')
+st.markdown("All average ratings are calculated out of 5.")
 st.markdown('   ')
 
 c1, c2 = st.columns((7,3))
@@ -68,10 +75,14 @@ with c2:
         div = Div(text=html)
         st.bokeh_chart(div)
 
-col1, col2 = st.columns(2)
+col1, col2, col3, col4 = st.columns(4)
 col1.metric("Total Responses", len(data))
-col2.metric("Improvement Efforts", data["Improvement Efforts"].sum()) #what is this data measuring? 
-# does improvement efforts need to be averaged?
+col2.metric("Avg. Improvement Efforts", round(data["Improvement Efforts"].mean(), 2))
+col3.metric("Avg. Guidelines Before", round(counts_before.mean(), 0) / 10)
+col4.metric("Avg. Guidelines After", round(counts_after.mean()) / 10)
+
+st.markdown("The following scale corresponds to Guidelines: Very Low: 1, Low: 2, Average: 3, High: 4, Very High: 5")
+
 # include third metric for  growth in guidelines? or maybe one for avg. guidelines before, avg. guidelines after, and avg. growth
 st.markdown('   ')
 
@@ -147,8 +158,50 @@ st.plotly_chart(fig)
 
 
 
-# graph here to indicate average growth in guidelines?
-# or maybe, create an overlapping graph - overlay guidelines before and after
+
+
+# st.markdown('### Guidelines Before and After')
+
+# # Get value counts for both columns
+# before_counts = data['Guidelines Before'].value_counts().reset_index()
+# before_counts.columns = ['Guidelines', 'Count']
+# after_counts = data['Guidelines After'].value_counts().reset_index()
+# after_counts.columns = ['Guidelines', 'Count']
+
+# # Define the order of the labels
+# labels_order = ["Very Low", "Low", "Average", "High", "Very High"]
+
+# bar_color = '#7792E3'
+# bar_color = '#3C9E8D'
+
+# # Create subplots
+# fig = make_subplots(rows=1, cols=2, subplot_titles=('Before', 'After'))
+
+# # Add bar charts to subplots
+# fig.add_trace(go.Bar(x=before_counts['Guidelines'], y=before_counts['Count'],
+#                      text=before_counts['Count'], marker_color=bar_color,
+#                      texttemplate='%{text}', textposition='auto',
+#                      name='Before'), row=1, col=1)
+# fig.add_trace(go.Bar(x=after_counts['Guidelines'], y=after_counts['Count'],
+#                      text=after_counts['Count'], marker_color=bar_color,
+#                      texttemplate='%{text}', textposition='auto',
+#                      name='After'), row=1, col=2)
+
+# # Update axis labels and tick values
+# fig.update_xaxes(title_text='Guidelines', tickmode='array', tickvals=labels_order,
+#                  row=1, col=1)
+# fig.update_xaxes(title_text='Guidelines', tickmode='array', tickvals=labels_order[2:],
+#                  row=1, col=2)
+
+# fig.update_yaxes(title_text='Count', row=1, col=1)
+# fig.update_yaxes(title_text='Count', row=1, col=2)
+
+# # Update layout
+# fig.update_layout(showlegend=False, height=400, width=800)
+
+# # Show chart
+# st.plotly_chart(fig)
+
 
 
 st.markdown('   ')
