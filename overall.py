@@ -47,18 +47,6 @@ guidelines_scale = {"Very Low": 1, "Low": 2, "Average": 3, "High": 4, "Very High
 
 counts_before = guidelines_before.value_counts().reindex(["Very Low", "Low", "Average", "High", "Very High"])
 counts_after = guidelines_after.value_counts().reindex(["Very Low", "Low", "Average", "High", "Very High"])
-total_students = len(guidelines_after)
-perc_vlow_before = 100*(counts_before["Very Low"]/total_students)
-perc_vlow_after = 100*(counts_after["Very Low"]/total_students)
-perc_low_before = 100*(counts_before["Low"]/total_students)
-perc_low_after = 100*(counts_after["Low"]/total_students)
-perc_avg_before = 100*(counts_before["Average"]/total_students)
-perc_avg_after = 100*(counts_after["Average"]/total_students)
-perc_high_before = 100*(counts_before["High"]/total_students)
-perc_high_after = 100*(counts_after["High"]/total_students)
-perc_vhigh_before = 100*(counts_before["Very High"]/total_students)
-perc_vhigh_after = 100*(counts_after["Very High"]/total_students)
-
 
 st.markdown('   ')
 st.markdown("All average ratings are calculated out of 5.")
@@ -113,94 +101,51 @@ st.header("\nGraphs & Trends")
 # Average knowledge gain, most popular classes, trends over time
 
 
-st.markdown('### Guidelines Before')
+st.markdown('### Guidelines Before & After')
 
-value_counts = data['Guidelines Before'].value_counts().reset_index()
-value_counts.columns = ['Guidelines Before', 'Count']
+# Get value counts for "Guidelines Before"
+value_counts_before = data['Guidelines Before'].value_counts().reset_index()
+value_counts_before.columns = ['Guidelines', 'Count']
 
-# Define the order of the labels
-labels_order = ["Very Low", "Low", "Average", "High", "Very High"]
+labels_order_before = ["Very Low", "Low", "Average", "High", "Very High"]
+labels_order_after = ["Average", "High", "Very High"]
+bar_color_before = 'blue'
+bar_color_after = secondary_color
 
-bar_color = secondary_color
 
-fig = px.bar(value_counts, x='Guidelines Before', y='Count', text='Count',
-             category_orders={'Guidelines Before': labels_order},
-             color_discrete_sequence=[bar_color])
-fig.update_traces(texttemplate='%{text}', textposition='auto')
+# Create the first bar chart
+fig = px.bar(value_counts_before, x='Guidelines', y='Count', text='Count',
+             category_orders={'Guidelines': labels_order_before},
+             color_discrete_sequence=[bar_color_before])
 
-fig.update_layout(xaxis_title='Guidelines Before',
+# Update the chart title and axis labels
+fig.update_layout(title='Guidelines Before & After',
+                  xaxis_title='Guidelines',
                   yaxis_title='Count')
 
+# Get value counts for "Guidelines After"
+value_counts_after = data['Guidelines After'].value_counts().reset_index()
+value_counts_after.columns = ['Guidelines', 'Count']
+
+# Create the second bar chart
+fig.add_trace(go.Bar(x=value_counts_after['Guidelines'],
+                     y=value_counts_after['Count'],
+                     name='Guidelines After',
+                     marker_color=bar_color_after))
+
+# Update the trace labels
+fig.update_traces(texttemplate='%{y}', textposition='auto')
+
+fig.update_layout(legend=dict(
+    orientation='v',
+    xanchor='right',
+    itemsizing='constant',
+    itemwidth=50,
+    bgcolor='rgba(255, 255, 255, 0.5)'),
+)
+
+# Display the chart
 st.plotly_chart(fig)
-
-
-st.markdown('   ')
-
-st.markdown('### Guidelines After')
-
-value_counts = data['Guidelines After'].value_counts().reset_index()
-value_counts.columns = ['Guidelines After', 'Count']
-
-# Define the order of the labels
-labels_order = ["Average", "High", "Very High"]
-
-bar_color = secondary_color
-
-fig = px.bar(value_counts, x='Guidelines After', y='Count', text='Count',
-             category_orders={'Guidelines After': labels_order},
-             color_discrete_sequence=[bar_color])
-fig.update_traces(texttemplate='%{text}', textposition='auto')
-
-fig.update_layout(xaxis_title='Guidelines After',
-                  yaxis_title='Count')
-
-st.plotly_chart(fig)
-
-
-
-
-
-# st.markdown('### Guidelines Before and After')
-
-# # Get value counts for both columns
-# before_counts = data['Guidelines Before'].value_counts().reset_index()
-# before_counts.columns = ['Guidelines', 'Count']
-# after_counts = data['Guidelines After'].value_counts().reset_index()
-# after_counts.columns = ['Guidelines', 'Count']
-
-# # Define the order of the labels
-# labels_order = ["Very Low", "Low", "Average", "High", "Very High"]
-
-# bar_color = '#7792E3'
-# bar_color = '#3C9E8D'
-
-# # Create subplots
-# fig = make_subplots(rows=1, cols=2, subplot_titles=('Before', 'After'))
-
-# # Add bar charts to subplots
-# fig.add_trace(go.Bar(x=before_counts['Guidelines'], y=before_counts['Count'],
-#                      text=before_counts['Count'], marker_color=bar_color,
-#                      texttemplate='%{text}', textposition='auto',
-#                      name='Before'), row=1, col=1)
-# fig.add_trace(go.Bar(x=after_counts['Guidelines'], y=after_counts['Count'],
-#                      text=after_counts['Count'], marker_color=bar_color,
-#                      texttemplate='%{text}', textposition='auto',
-#                      name='After'), row=1, col=2)
-
-# # Update axis labels and tick values
-# fig.update_xaxes(title_text='Guidelines', tickmode='array', tickvals=labels_order,
-#                  row=1, col=1)
-# fig.update_xaxes(title_text='Guidelines', tickmode='array', tickvals=labels_order[2:],
-#                  row=1, col=2)
-
-# fig.update_yaxes(title_text='Count', row=1, col=1)
-# fig.update_yaxes(title_text='Count', row=1, col=2)
-
-# # Update layout
-# fig.update_layout(showlegend=False, height=400, width=800)
-
-# # Show chart
-# st.plotly_chart(fig)
 
 
 
