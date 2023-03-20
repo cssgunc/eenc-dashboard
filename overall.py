@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
-from bokeh.models.widgets import Div
+# may need to import Bokeh Div again in order to open new pages
 
 # Set page title and favicon
 st.set_page_config(page_title="Homepage", page_icon="assets/EENC-logo.png", layout="wide")
@@ -38,10 +38,41 @@ if form_name != 'All':
 if location != 'All':
     data = data[data['Online/In-Person'] == location]
 
+
+# Check that this translates over guidelines qualitative values to quantitative
+guidelines_before = data['Guidelines Before']
+guidelines_after = data['Guidelines After']
+guidelines_scale = {"Very Low": 1, "Low": 2, "Average": 3, "High": 4, "Very High": 5}
+
+counts_before = guidelines_before.value_counts().reindex(["Very Low", "Low", "Average", "High", "Very High"])
+counts_after = guidelines_after.value_counts().reindex(["Very Low", "Low", "Average", "High", "Very High"])
+total_students = len(guidelines_after)
+perc_high_before = 100*(counts_before["High"]/total_students)
+perc_high_after = 100*(counts_after["High"]/total_students)
+perc_vhigh_before = 100*(counts_before["Very High"]/total_students)
+perc_vhigh_after = 100*(counts_after["Very High"]/total_students)
+
+
+
+
 st.markdown('   ')
+
+c1, c2 = st.columns((7,3))
+with c1:
+    st.header("Improvement & Guidelines")
+with c2:
+    if st.button('Go to the Guidelines Page'):
+        js = "window.open('https://www.streamlit.io/')"  # New tab or window
+        js = "window.location.href = 'https://www.streamlit.io/'"  # Current tab
+        html = '<img src onerror="{}">'.format(js)
+        div = Div(text=html)
+        st.bokeh_chart(div)
+
 col1, col2 = st.columns(2)
 col1.metric("Total Responses", len(data))
-col2.metric("Improvement Efforts", data["Improvement Efforts"].sum())
+col2.metric("Improvement Efforts", data["Improvement Efforts"].sum()) #what is this data measuring? 
+# does improvement efforts need to be averaged?
+# include third metric for  growth in guidelines? or maybe one for avg. guidelines before, avg. guidelines after, and avg. growth
 st.markdown('   ')
 
 
@@ -49,7 +80,7 @@ c1, c2 = st.columns((7,3))
 with c1:
     st.header("Ratings")
 with c2:
-    if st.button('Go to Ratings Page'):
+    if st.button('Go to the Ratings Page'):
         js = "window.open('https://www.streamlit.io/')"  # New tab or window
         js = "window.location.href = 'https://www.streamlit.io/'"  # Current tab
         html = '<img src onerror="{}">'.format(js)
@@ -113,6 +144,12 @@ fig.update_layout(xaxis_title='Guidelines After',
                   yaxis_title='Count')
 
 st.plotly_chart(fig)
+
+
+
+# graph here to indicate average growth in guidelines?
+# or maybe, create an overlapping graph - overlay guidelines before and after
+
 
 st.markdown('   ')
 
