@@ -20,7 +20,7 @@ bar_colors = ['#3C9E8D', '#4AC14D', '#4AE19C', '#4FF57E', '#45F7EB', '#42DBED', 
 other_bar_colors = ['#42B6ED', '#42DBED', '#45F7DA', '#4AE19C', '#3C9E8D']
 
 # Add a title to the app
-st.title('Demographics for the EENC Dashboard')
+st.title('Demographics Summary')
 st.markdown('A visualization of different statistics relating to the demographics of EENC.')
 st.markdown("---")
 #Sidebar
@@ -164,7 +164,7 @@ measures = {
     'Largest student count':[mix_student_count.max(), rural_student_count.max(), suburban_student_count.max(), urban_student_count.max()]
 }
 measures_frame = pd.DataFrame(data=measures)
-st.table(measures_frame.style.format({'Average student count': "{:.2f}", 'Median student count': "{:.2f}", 'Smallest student count': "{:.2f}", 'Largest student count': "{:.2f}"}))
+st.dataframe(measures_frame.style.format({'Average student count': "{:.2f}", 'Median student count': "{:.2f}", 'Smallest student count': "{:.2f}", 'Largest student count': "{:.2f}"}))
 
 rural_course_rating = data[data['Student Location']=='Rural']['Instructor Rating']
 suburban_course_rating = data[data['Student Location']=='Suburban']['Instructor Rating']
@@ -184,7 +184,7 @@ location_ratings_frame = pd.DataFrame(data=location_ratings)
 location_to_rating_bar_fig = px.bar(data_frame=location_ratings_frame, x='Student Location', y=['1', '2', '3', '4', '5'], color_discrete_sequence=other_bar_colors, text_auto=True)
 location_to_rating_bar_fig.update_layout(legend_title_text='Instructor Rating', yaxis_title='Percentage of Ratings')
 st.subheader('Correlation between Student Location and Instructor Rating')
-st.caption('This segemented bar graph depicts how instructor ratings differ based on student location. Each bar segment represents the percentage of each rating value for the area, with all of the segments for each bar adding to 100%.')
+st.caption('This segmented bar graph depicts how instructor ratings differ based on student location. Each bar segment represents the percentage of each rating value for the area, with all of the segments for each bar adding to 100%.')
 st.plotly_chart(location_to_rating_bar_fig)
 
 # Add CSS to customize text colors
