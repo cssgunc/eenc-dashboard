@@ -102,7 +102,7 @@ y = {
     "High": [counts_before["High"], counts_after["High"]],
     "Very High": [counts_before["Very High"], counts_after["Very High"]]
 }
-barcolor = ["#142735", "#1f7774", "#3c9e8d", "#a6d687", "#dbe955"]
+barcolor = ['#42B6ED', '#42DBED', '#45F7DA', '#4AE19C', '#3C9E8D']
 x = np.array([0, 0.7])
 width = 0.1
 multiplier = 0
