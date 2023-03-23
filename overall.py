@@ -109,7 +109,7 @@ value_counts_before.columns = ['Guidelines', 'Count']
 
 labels_order_before = ["Very Low", "Low", "Average", "High", "Very High"]
 labels_order_after = ["Average", "High", "Very High"]
-bar_color_before = 'blue'
+bar_color_before = '#42B6ED'
 bar_color_after = secondary_color
 
 
