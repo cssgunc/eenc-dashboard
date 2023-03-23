@@ -11,15 +11,19 @@ db = firestore.Client(credentials=creds)
 
 # Create a reference to the Google post.
 doc_ref = db.collection('master_data')
+data_arr = []
 
 for doc in doc_ref.stream():
     data = doc.to_dict()
+    data_arr.append(data.copy())
     event = data["form_name"]
     course_rating = data["course_rating"]
     instructor_rating = data["instructor_rating"]
     accessibility_rating = data["accessibility_rating"]
     navigation_rating = data["navigation_rating"]
     st.title(event)
-    st.write("Course Rating: ", event)
-    st.write("Instructor Rating: ", course_rating)
+    st.write("Course Rating: ", course_rating)
+    st.write("Instructor Rating: ", instructor_rating)
+
+print(data_arr)
 
