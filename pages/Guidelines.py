@@ -6,9 +6,6 @@ import matplotlib.pyplot as plt
 
 data = pd.read_csv("data/data.csv")
 
-# set logo and page name
-st.set_page_config(page_title="Guidelines", page_icon="assets/EENC-logo.png", layout="wide")
-
 st.image("assets/EENC-logo.png", width = 100)
 
 # sidebar
@@ -18,10 +15,10 @@ event_type = st.sidebar.radio("Location", ['All', 'Online', 'In-Person'])
 location = st.sidebar.radio("Student Location", ["All", "Mix of Areas", "Rural", "Urban", "Suburban"])
 
 # Filter the data
-if form_name != 'All': #event name
-    data = data[data["Form Name"] == form_name]
-if event_type != "All":
-    data = data[data["Online/In-Person"] == event_type]
+if form_name != 'All':
+    data = data[data['Form Name'] == form_name]
+if event_type != 'All':
+    event_type = data[data['Online/In-Person'] == event_type]
 if location == "Mix of Areas":
     data_Mix = data[data["Student Location"] == location]
     data_AMix = data[data["Student Location"] == "A Mix of Areas"]
@@ -34,12 +31,16 @@ else:
 # Main content
 st.title("Guidelines Summary")
 st.markdown("This page displays a summary of guidelines for EENC courses. Use the filters on the left to customize the results.")
-st.markdown('   ')
+st.markdown('---')
 
 # set theme color
 primary_color = "#195E4C"
 secondary_color = "#3C9E8D"
 text_color = "#6D7183"
+mat.rcParams['text.color'] = text_color
+mat.rcParams['axes.labelcolor'] = text_color
+mat.rcParams['xtick.color'] = text_color
+mat.rcParams['ytick.color'] = text_color
 
 # Get guidelines data
 guidelines_before = data['Guidelines Before']
@@ -51,15 +52,15 @@ counts_after = guidelines_after.value_counts().reindex(["Very Low", "Low", "Aver
 
 st.header("Graphs & Trends")
 st.subheader("How do guidelines change before and after?")
-st.markdown("*Circle size indicates number of population.")
+st.caption("*Circle size indicates number of population; Numbers of students are shown in the box.")
 st.markdown("")
 
 #calculate stats
 total_students = len(guidelines_after)
-perc_high_before = 100*(counts_before["High"]/total_students)
-perc_high_after = 100*(counts_after["High"]/total_students)
-perc_vhigh_before = 100*(counts_before["Very High"]/total_students)
-perc_vhigh_after = 100*(counts_after["Very High"]/total_students)
+perc_high_before = np.nan_to_num(100*(counts_before["High"]/total_students))
+perc_high_after = np.nan_to_num(100*(counts_after["High"]/total_students))
+perc_vhigh_before = np.nan_to_num(100*(counts_before["Very High"]/total_students))
+perc_vhigh_after = np.nan_to_num(100*(counts_after["Very High"]/total_students))
 
 #Figure 1: Scatter plot and lines
 with st.container():
@@ -79,11 +80,17 @@ with st.container():
         ax.margins(x=0.4, y=0.2)
         green_circle = mat.lines.Line2D([], [], color="white", marker='o', markerfacecolor=secondary_color, alpha=0.5, markersize=10)
         ax.legend([green_circle], ['Students Population'], loc="lower right")
+        annotations = np.nan_to_num(pd.concat([counts_before, counts_after]))
+        min_text_offset = 20
+        text_offset = np.sqrt(max(size.values)) if np.sqrt(max(size.values)) > min_text_offset else min_text_offset
+        for xi, yi, text in zip(x, y, annotations):
+            if text != 0:
+                ax.annotate(int(text), xy=(xi, yi), xycoords='data', xytext=(text_offset, 0), textcoords='offset points', bbox=dict(boxstyle="square,pad=0.3", facecolor="#1C00ff00", edgecolor=text_color))
         st.pyplot(fig)
 
 st.markdown('   ')
 st.subheader("How does the overall pattern change?")
-st.markdown("Below shows the overall pattern of students' guidelines.")
+st.caption("Below shows the overall pattern of students' guidelines.")
 
 #Figure 2: bar plot
 fig, ax = plt.subplots()
@@ -135,12 +142,3 @@ st.markdown(f"""
         }}
     </style>
 """, unsafe_allow_html=True)
-
-# Hide footer and menu
-hide_default_format = """
-       <style>
-       #MainMenu {visibility: hidden; }
-       footer {visibility: hidden;}
-       </style>
-       """
-st.markdown(hide_default_format, unsafe_allow_html=True)

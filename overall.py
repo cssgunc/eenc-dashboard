@@ -17,6 +17,7 @@ st.image("assets/EENC-logo.png", width=100)
 
 st.title("Welcome to the EENC dashboard")
 st.markdown("This page displays overall information for the EENC courses. Use the filters on the left to customize the results.")
+st.write("Based on " + str(len(data)) + " total responses [(Learn more)](streamlit.io).")
 st.markdown('---')
 
 primary_color = "#195E4C"
@@ -48,28 +49,27 @@ guidelines_scale = {"Very Low": 1, "Low": 2, "Average": 3, "High": 4, "Very High
 counts_before = guidelines_before.value_counts().reindex(["Very Low", "Low", "Average", "High", "Very High"])
 counts_after = guidelines_after.value_counts().reindex(["Very Low", "Low", "Average", "High", "Very High"])
 
-st.markdown('   ')
-st.markdown("All average ratings are calculated out of 5.")
-st.markdown('   ')
+
+
 
 c1, c2 = st.columns((7,3))
 with c1:
     st.header("Improvement & Guidelines")
 with c2:
-    if st.button('Go to the Guidelines Page'):
+    if st.button('More details about Guidelines'):
         js = "window.open('https://www.streamlit.io/')"  # New tab or window
         js = "window.location.href = 'https://www.streamlit.io/'"  # Current tab
         html = '<img src onerror="{}">'.format(js)
         div = Div(text=html)
         st.bokeh_chart(div)
 
-col1, col2, col3, col4 = st.columns(4)
-col1.metric("Total Responses", len(data))
+col2, col3, col4 = st.columns(3)
+
 col2.metric("Avg. Improvement Efforts", round(data["Improvement Efforts"].mean(), 2))
 col3.metric("Avg. Guidelines Before", round(counts_before.mean(), 0) / 10)
 col4.metric("Avg. Guidelines After", round(counts_after.mean()) / 10)
 
-st.markdown("The following scale corresponds to Guidelines: Very Low: 1, Low: 2, Average: 3, High: 4, Very High: 5")
+st.info("The following scale corresponds to guidelines: 1 - Very Low, 2 - Low, 3 - Average, 4 - High, 5 - Very High")
 
 # include third metric for  growth in guidelines? or maybe one for avg. guidelines before, avg. guidelines after, and avg. growth
 st.markdown('   ')
@@ -79,12 +79,13 @@ c1, c2 = st.columns((7,3))
 with c1:
     st.header("Ratings")
 with c2:
-    if st.button('Go to the Ratings Page'):
+    if st.button('More details about Ratings'):
         js = "window.open('https://www.streamlit.io/')"  # New tab or window
         js = "window.location.href = 'https://www.streamlit.io/'"  # Current tab
         html = '<img src onerror="{}">'.format(js)
         div = Div(text=html)
         st.bokeh_chart(div)
+
 
 # total number of respondents, course rating, average ratings
 # put some stuff that links to mel's rating page
@@ -94,6 +95,7 @@ col2.metric("Avg. Instructor", round(data['Instructor Rating'].mean(), 2))
 col3.metric("Avg. Accessibility", round(data['Accessibility Rating'].mean(), 2))
 col4.metric("Avg. Navigation", round(data['Navigation Rating'].mean(), 2))
 
+st.info("All average ratings are calculated out of 5.")
 
 st.markdown('   ')
 st.markdown('   ')
@@ -182,6 +184,12 @@ st.markdown(f"""
         }}
         h1, h2, h3, h4, h5, h6 {{
             color: {primary_color};
+        }}
+        button {{
+            float: right;
+        }}
+        a {{
+            color: {secondary_color};
         }}
     </style>
 """, unsafe_allow_html=True)

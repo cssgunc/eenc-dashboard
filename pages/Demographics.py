@@ -15,12 +15,11 @@ st.image("assets/EENC-logo.png", width=100)
 primary_color = '#195E4C'
 secondary_color = '#3C9E8D'
 text_color = '#6D7183'
-#bar_colors = ['#3C9E8D', '#4AE19C', '#4FF57E', '#4AE14D', '#88F956', '#DBFA59', '#F4F281']
 bar_colors = ['#3C9E8D', '#4AC14D', '#4AE19C', '#4FF57E', '#45F7EB', '#42DBED', '#42B6ED']
 other_bar_colors = ['#42B6ED', '#42DBED', '#45F7DA', '#4AE19C', '#3C9E8D']
 
 # Add a title to the app
-st.title('Demographics for the EENC Dashboard')
+st.title('Demographics Summary')
 st.markdown('A visualization of different statistics relating to the demographics of EENC.')
 st.markdown("---")
 #Sidebar
@@ -95,6 +94,14 @@ professions_numbers = [
 
 bar_color = secondary_color
 
+# st.header('Statistics for Instructor Professions')
+professions_bar_fig = px.bar(x=all_professions, y=professions_percentages, labels=dict(x='Professions', y='Percentage (out of Total Instructors)'), color_discrete_sequence=[bar_color])
+professions_bar_fig.update_yaxes(range=[0,100])
+
+professions_pie_fig = px.pie(values=professions_numbers, names=all_professions, color_discrete_sequence=bar_colors)
+professions_pie_fig.update_traces(textinfo='value')
+professions_pie_fig.update_traces(sort=False)
+
 st.header('Distribution of Instructor Professions')
 professions_bar_fig = px.bar(x=all_professions, y=professions_percentages, labels=dict(x='Professions', y='Percentage (out of Total Instructors)'), color_discrete_sequence=[bar_color])
 professions_bar_fig.update_yaxes(range=[0,100])
@@ -131,6 +138,8 @@ col2.metric("Largest student count", data['Student Count'].max())
 data['Instructor Rating'] = data['Instructor Rating'].astype(int)
 course_rating = data['Instructor Rating']
 student_count_to_course_rating_fig = px.scatter(x=student_count, y=course_rating, labels=dict(x='Student Count',y='Instructor Rating'), color_discrete_sequence=[bar_color])
+
+
 student_count_to_course_rating_fig.update_xaxes(range=[-100,3200])
 student_count_to_course_rating_fig.update_yaxes(range=[0,5.2])
 student_count_to_course_rating_fig.update_traces(marker=dict(size=12, line=dict(width=1.5, color='Black')), selector=dict(mode='markers'))
@@ -153,6 +162,11 @@ average_mix_student_count = round(mix_student_count.mean(), 2)
 student_location = data['Student Location']
 student_location = student_location.replace("A Mix of Areas", "Mix of Areas")
 
+
+student_location_to_course_rating_fig = px.strip(x=student_location, y=course_rating, color_discrete_sequence=[bar_color], labels=dict(x='Student Location',y='Instructor Rating'))
+student_location_to_course_rating_fig.update_yaxes(range=[0,5.4])
+
+
 st.header('Statistics for Student Location')
 
 measures = {
@@ -164,7 +178,7 @@ measures = {
     'Largest student count':[mix_student_count.max(), rural_student_count.max(), suburban_student_count.max(), urban_student_count.max()]
 }
 measures_frame = pd.DataFrame(data=measures)
-st.table(measures_frame.style.format({'Average student count': "{:.2f}", 'Median student count': "{:.2f}", 'Smallest student count': "{:.2f}", 'Largest student count': "{:.2f}"}))
+st.dataframe(measures_frame.style.format({'Average student count': "{:.2f}", 'Median student count': "{:.2f}", 'Smallest student count': "{:.2f}", 'Largest student count': "{:.2f}"}))
 
 rural_course_rating = data[data['Student Location']=='Rural']['Instructor Rating']
 suburban_course_rating = data[data['Student Location']=='Suburban']['Instructor Rating']
@@ -184,8 +198,9 @@ location_ratings_frame = pd.DataFrame(data=location_ratings)
 location_to_rating_bar_fig = px.bar(data_frame=location_ratings_frame, x='Student Location', y=['1', '2', '3', '4', '5'], color_discrete_sequence=other_bar_colors, text_auto=True)
 location_to_rating_bar_fig.update_layout(legend_title_text='Instructor Rating', yaxis_title='Percentage of Ratings')
 st.subheader('Correlation between Student Location and Instructor Rating')
-st.caption('This segemented bar graph depicts how instructor ratings differ based on student location. Each bar segment represents the percentage of each rating value for the area, with all of the segments for each bar adding to 100%.')
+st.caption('This segmented bar graph depicts how instructor ratings differ based on student location. Each bar segment represents the percentage of each rating value for the area, with all of the segments for each bar adding to 100%.')
 st.plotly_chart(location_to_rating_bar_fig)
+
 
 # Add CSS to customize text colors
 st.markdown(f"""
