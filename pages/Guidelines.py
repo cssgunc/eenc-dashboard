@@ -6,6 +6,9 @@ import matplotlib.pyplot as plt
 
 data = pd.read_csv("data/data.csv")
 
+# Data from Streamlit state
+st_data = st.session_state["master_data"]
+
 st.image("assets/EENC-logo.png", width = 100)
 
 # sidebar

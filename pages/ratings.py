@@ -5,6 +5,9 @@ import plotly.express as px
 # Load the data
 data = pd.read_csv("data/data.csv")
 
+# Data from Streamlit state
+st_data = st.session_state["master_data"]
+
 # put logo on sidebar
 
 # create a dictionary that maps string values to numerical values
