@@ -8,6 +8,9 @@ st.set_page_config(page_title="Demographics", page_icon="assets/EENC-logo.png", 
 # Load the data
 data = pd.read_csv("data/data.csv")
 
+# Data from Streamlit state
+st_data = st.session_state["master_data"]
+
 #put logo on sidebar
 st.image("assets/EENC-logo.png", width=100)
 
