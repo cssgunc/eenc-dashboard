@@ -6,6 +6,9 @@ import matplotlib.pyplot as plt
 
 data = pd.read_csv("data/data.csv")
 
+# Data from Streamlit state
+st_data = st.session_state["master_data"]
+
 st.image("assets/EENC-logo.png", width = 100)
 
 # sidebar
@@ -15,10 +18,10 @@ event_type = st.sidebar.radio("Location", ['All', 'Online', 'In-Person'])
 location = st.sidebar.radio("Student Location", ["All", "Mix of Areas", "Rural", "Urban", "Suburban"])
 
 # Filter the data
-if form_name != 'All': #event name
-    data = data[data["Form Name"] == form_name]
-if event_type != "All":
-    data = data[data["Online/In-Person"] == event_type]
+if form_name != 'All':
+    data = data[data['Form Name'] == form_name]
+if event_type != 'All':
+    event_type = data[data['Online/In-Person'] == event_type]
 if location == "Mix of Areas":
     data_Mix = data[data["Student Location"] == location]
     data_AMix = data[data["Student Location"] == "A Mix of Areas"]
@@ -31,7 +34,7 @@ else:
 # Main content
 st.title("Guidelines Summary")
 st.markdown("This page displays a summary of guidelines for EENC courses. Use the filters on the left to customize the results.")
-st.markdown('   ')
+st.markdown('---')
 
 # set theme color
 primary_color = "#195E4C"
@@ -52,7 +55,7 @@ counts_after = guidelines_after.value_counts().reindex(["Very Low", "Low", "Aver
 
 st.header("Graphs & Trends")
 st.subheader("How do guidelines change before and after?")
-st.markdown("*Circle size indicates number of population; Numbers of students are shown in the box.")
+st.caption("*Circle size indicates number of population; Numbers of students are shown in the box.")
 st.markdown("")
 
 #calculate stats
@@ -90,7 +93,7 @@ with st.container():
 
 st.markdown('   ')
 st.subheader("How does the overall pattern change?")
-st.markdown("Below shows the overall pattern of students' guidelines.")
+st.caption("Below shows the overall pattern of students' guidelines.")
 
 #Figure 2: bar plot
 fig, ax = plt.subplots()
@@ -102,7 +105,7 @@ y = {
     "High": [counts_before["High"], counts_after["High"]],
     "Very High": [counts_before["Very High"], counts_after["Very High"]]
 }
-barcolor = ['#42B6ED', '#42DBED', '#45F7DA', '#4AE19C', '#3C9E8D']
+barcolor = ["#142735", "#1f7774", "#3c9e8d", "#a6d687", "#dbe955"]
 x = np.array([0, 0.7])
 width = 0.1
 multiplier = 0
