@@ -6,10 +6,12 @@ import plotly.express as px
 st.set_page_config(page_title="Demographics", page_icon="assets/EENC-logo.png", layout="wide")
 
 # Load the data
-data = pd.read_csv("data/data.csv")
+#data = pd.read_csv("data/data.csv")
 
 # Data from Streamlit state
-st_data = st.session_state["master_data"]
+data = st.session_state['master_data']
+#data = st_data
+data = data.replace('N/A', float('nan'))
 
 #put logo on sidebar
 st.image("assets/EENC-logo.png", width=100)
@@ -56,7 +58,7 @@ school_teacher_total = school_teacher.sum()
 student = data['Current Profession'].str.contains('Student|student')
 student_total = student.sum()
 
-other = ~data['Current Profession'].str.contains('Non-Formal Educator|Conservation/Natural Resources Professional|College/University Instructor|Program Director/Administrator|PreK-12 Classroom Teacher|Student|student')
+other = data['Current Profession'].str.contains('Non-Formal Educator|Conservation/Natural Resources Professional|College/University Instructor|Program Director/Administrator|PreK-12 Classroom Teacher|Student|student')
 other_total = other.sum()
 
 all_professions = [
@@ -131,7 +133,7 @@ col2.metric("Largest student count", data['Student Count'].max())
 
 
 #relation between student count and course rating
-data['Instructor Rating'] = data['Instructor Rating'].astype(int)
+#data['Instructor Rating'] = data['Instructor Rating'].astype(int)
 course_rating = data['Instructor Rating']
 student_count_to_course_rating_fig = px.scatter(x=student_count, y=course_rating, labels=dict(x='Student Count',y='Instructor Rating'), color_discrete_sequence=[bar_color])
 
@@ -152,7 +154,7 @@ suburban_student_count = data[data['Student Location']=='Suburban']['Student Cou
 average_suburban_student_count = round(suburban_student_count.mean(), 2)
 urban_student_count = data[data['Student Location']=='Urban']['Student Count']
 average_urban_student_count = round(urban_student_count.mean(), 2)
-mix_student_count = data[data['Student Location'].str.contains('Mix of Areas')]['Student Count']
+mix_student_count = data[data['Student Location'].str.contains('Mix of Areas', na=False)]['Student Count']
 average_mix_student_count = round(mix_student_count.mean(), 2)
 
 student_location = data['Student Location']
@@ -179,22 +181,31 @@ st.dataframe(measures_frame.style.format({'Average student count': "{:.2f}", 'Me
 rural_course_rating = data[data['Student Location']=='Rural']['Instructor Rating']
 suburban_course_rating = data[data['Student Location']=='Suburban']['Instructor Rating']
 urban_course_rating = data[data['Student Location']=='Urban']['Instructor Rating']
-mix_course_rating = data[data['Student Location'].str.contains('Mix of Areas')]['Instructor Rating']
+mix_course_rating = data[data['Student Location'].str.contains('Mix of Areas', na=False)]['Instructor Rating']
+
+#location_ratings = {
+    #'Student Location':['Mix of Areas', 'Rural', 'Suburban', 'Urban'],
+    #'1':[round((mix_course_rating==1).sum()/len(mix_course_rating), 4) * 100, round((rural_course_rating==1).sum()/len(rural_course_rating), 4) * 100, round((suburban_course_rating==1).sum()/len(suburban_course_rating), 4) * 100, round((urban_course_rating==1).sum()/len(urban_course_rating), 4) * 100],
+    #'2':[round((mix_course_rating==2).sum()/len(mix_course_rating), 4) * 100, round((rural_course_rating==2).sum()/len(rural_course_rating), 4) * 100, round((suburban_course_rating==2).sum()/len(suburban_course_rating), 4) * 100, round((urban_course_rating==2).sum()/len(urban_course_rating), 4) * 100],
+    #'3':[round((mix_course_rating==3).sum()/len(mix_course_rating), 4) * 100, round((rural_course_rating==3).sum()/len(rural_course_rating), 4) * 100, round((suburban_course_rating==3).sum()/len(suburban_course_rating), 4) * 100, round((urban_course_rating==3).sum()/len(urban_course_rating), 4) * 100],
+    #'4':[round((mix_course_rating==4).sum()/len(mix_course_rating), 4) * 100, round((rural_course_rating==4).sum()/len(rural_course_rating), 4) * 100, round((suburban_course_rating==4).sum()/len(suburban_course_rating), 4) * 100, round((urban_course_rating==4).sum()/len(urban_course_rating), 4) * 100],
+    #'5':[round((mix_course_rating==5).sum()/len(mix_course_rating), 4) * 100, round((rural_course_rating==5).sum()/len(rural_course_rating), 4) * 100, round((suburban_course_rating==5).sum()/len(suburban_course_rating), 4) * 100, round((urban_course_rating==5).sum()/len(urban_course_rating), 4) * 100]
+#}
 
 location_ratings = {
     'Student Location':['Mix of Areas', 'Rural', 'Suburban', 'Urban'],
-    '1':[round((mix_course_rating==1).sum()/len(mix_course_rating), 4) * 100, round((rural_course_rating==1).sum()/len(rural_course_rating), 4) * 100, round((suburban_course_rating==1).sum()/len(suburban_course_rating), 4) * 100, round((urban_course_rating==1).sum()/len(urban_course_rating), 4) * 100],
-    '2':[round((mix_course_rating==2).sum()/len(mix_course_rating), 4) * 100, round((rural_course_rating==2).sum()/len(rural_course_rating), 4) * 100, round((suburban_course_rating==2).sum()/len(suburban_course_rating), 4) * 100, round((urban_course_rating==2).sum()/len(urban_course_rating), 4) * 100],
-    '3':[round((mix_course_rating==3).sum()/len(mix_course_rating), 4) * 100, round((rural_course_rating==3).sum()/len(rural_course_rating), 4) * 100, round((suburban_course_rating==3).sum()/len(suburban_course_rating), 4) * 100, round((urban_course_rating==3).sum()/len(urban_course_rating), 4) * 100],
-    '4':[round((mix_course_rating==4).sum()/len(mix_course_rating), 4) * 100, round((rural_course_rating==4).sum()/len(rural_course_rating), 4) * 100, round((suburban_course_rating==4).sum()/len(suburban_course_rating), 4) * 100, round((urban_course_rating==4).sum()/len(urban_course_rating), 4) * 100],
-    '5':[round((mix_course_rating==5).sum()/len(mix_course_rating), 4) * 100, round((rural_course_rating==5).sum()/len(rural_course_rating), 4) * 100, round((suburban_course_rating==5).sum()/len(suburban_course_rating), 4) * 100, round((urban_course_rating==5).sum()/len(urban_course_rating), 4) * 100]
+    '1':[(mix_course_rating==1).sum(), (rural_course_rating==1).sum(), (suburban_course_rating==1).sum(), (urban_course_rating==1).sum()],
+    '2':[(mix_course_rating==2).sum(), (rural_course_rating==2).sum(), (suburban_course_rating==2).sum(), (urban_course_rating==2).sum()],
+    '3':[(mix_course_rating==3).sum(), (rural_course_rating==3).sum(), (suburban_course_rating==3).sum(), (urban_course_rating==3).sum()],
+    '4':[(mix_course_rating==4).sum(), (rural_course_rating==4).sum(), (suburban_course_rating==4).sum(), (urban_course_rating==4).sum()],
+    '5':[(mix_course_rating==5).sum(), (rural_course_rating==5).sum(), (suburban_course_rating==5).sum(), (urban_course_rating==5).sum()]
 }
 
 location_ratings_frame = pd.DataFrame(data=location_ratings)
 location_to_rating_bar_fig = px.bar(data_frame=location_ratings_frame, x='Student Location', y=['1', '2', '3', '4', '5'], color_discrete_sequence=other_bar_colors, text_auto=True)
-location_to_rating_bar_fig.update_layout(legend_title_text='Instructor Rating', yaxis_title='Percentage of Ratings')
+location_to_rating_bar_fig.update_layout(legend_title_text='Instructor Rating', yaxis_title='Number of Ratings')
 st.subheader('Correlation between Student Location and Instructor Rating')
-st.caption('This segmented bar graph depicts how instructor ratings differ based on student location. Each bar segment represents the percentage of each rating value for the area, with all of the segments for each bar adding to 100%.')
+st.caption('This segmented bar graph depicts how instructor ratings differ based on student location. Each bar segement represents the number of instructors that received that particular rating value.')
 st.plotly_chart(location_to_rating_bar_fig)
 
 
