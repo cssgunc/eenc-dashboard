@@ -2,6 +2,7 @@ import pandas as pd
 import streamlit as st
 import plotly.express as px
 
+
 # Load the data
 # data = pd.read_csv("data/data.csv")
 
@@ -27,13 +28,14 @@ st.image("assets/EENC-logo.png", width=100)
 st.sidebar.title("Filters")
 form_name = st.sidebar.selectbox(
     "Select Form Name", ['All'] + sorted(data['Form Name'].unique()))
+st.sidebar.caption("Need more help? Refer to our documentation here")
 
 if form_name != 'All':
     data = data[data['Form Name'] == form_name]
 
 # Main content
 st.title("EENC Ratings Summary")
-st.write("This page displays a summary of ratings for EENC courses. Use the filters on the left to customize the results.")
+st.write("This page displays a summary of ratings for EENC courses. Use the filter on the left to customize the results.")
 st.markdown('---')
 
 

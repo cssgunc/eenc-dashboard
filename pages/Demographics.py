@@ -23,23 +23,16 @@ other_bar_colors = ['#42B6ED', '#42DBED', '#45F7DA', '#4AE19C', '#3C9E8D']
 
 # Add a title to the app
 st.title('Demographics Summary')
-st.markdown('A visualization of different statistics relating to the demographics of EENC.')
+st.markdown('This page displays a summary of demographics for EENC courses. Use the filter on the left to customize the results.')
 st.markdown("---")
 #Sidebar
 st.sidebar.title("Filters")
 form_name = st.sidebar.selectbox("Form Name", ['All'] + sorted(data['Form Name'].unique()))
-
-# Show location filter only when "All" is selected in "Form Name"
-if form_name == "All":
-    location = st.sidebar.radio("Location", ['All', 'Online', 'In-Person'])
-else:
-    location = "All"
+st.sidebar.caption("Need more help? Refer to our documentation here")
 
 #Filter the Data
 if form_name != "All":
     data = data[data['Form Name'] == form_name]
-if location != "All":
-    data = data[data['Online/In-Person'] == location]
 
 #Profession
 profession = data['Current Profession']
