@@ -3,10 +3,14 @@ import numpy as np
 import streamlit as st
 import matplotlib as mat
 import matplotlib.pyplot as plt
+# Set page title and favicon
+st.set_page_config(page_title="Ratings",
+                   page_icon="assets/EENC-logo.png", layout="wide")
 
 data = pd.read_csv("data/data.csv")
 
 st.image("assets/EENC-logo.png", width = 100)
+
 
 # sidebar
 st.sidebar.title("Filters")

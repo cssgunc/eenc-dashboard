@@ -102,7 +102,7 @@ with c2:
 
 col2, col3, col4 = st.columns(3)
 
-col2.metric("No. of Attendees", str(len(data)))
+col2.metric("No. of People Reached", str(len(data)))
 profession_count = data['Current Profession'].value_counts()
 max_attendees = profession_count.max()
 highest_attendees_profession = profession_count[profession_count == max_attendees].index.tolist()
