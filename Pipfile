@@ -10,7 +10,7 @@ plotly = "*"
 pandas = "*"
 google-cloud-firestore = "*"
 bokeh = "*"
-
+numpy = "*"
 
 [dev-packages]
 
