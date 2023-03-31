@@ -1,3 +1,4 @@
 secrets.toml
 firestore-key.json
 test.py
+/myenv
