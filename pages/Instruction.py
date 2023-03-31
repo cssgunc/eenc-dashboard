@@ -15,35 +15,55 @@ key_dict = json.loads(file_contents)
 creds = service_account.Credentials.from_service_account_info(key_dict)
 db = firestore.Client(credentials=creds)
 
-# Create a reference to the Google post.
-doc_ref = db.collection('master_data')
+# Obtain access to all collection names
 
-# Create dictionary that will be used to create dataframe
-data_dict = { "Form Name": [], "Timestamp": [], "Course Rating": [], 
-"Guidelines Before": [], "Guidelines After": [], "Improvement Efforts": [], 
-"Sharing Interest": [], "Instructor Rating": [], "Accessibility Rating": [], 
-"Navigation Rating": [], "Current Profession": [], "Student Count": [], "Student Location": []}
+collections = [c.id for c in db.collections()]
+collections.remove("master_data")
+feedback_dic = {}
 
-# Iterati
-for doc in doc_ref.stream():
-    data = doc.to_dict()
-    data_dict["Form Name"].append(data["form_name"])
-    data_dict["Timestamp"].append(data["timestamp"])
-    data_dict["Course Rating"].append(data["course_rating"])
-    data_dict["Guidelines Before"].append(data["guidelines_before"])
-    data_dict["Guidelines After"].append(data["guidelines_after"])
-    data_dict["Improvement Efforts"].append(data["improvement_efforts"])
-    data_dict["Sharing Interest"].append(data["sharing_interest"])
-    data_dict["Instructor Rating"].append(data["instructor_rating"])
-    data_dict["Accessibility Rating"].append(data["accessibility_rating"])
-    data_dict["Navigation Rating"].append(data["navigation_rating"])
-    data_dict["Current Profession"].append(data["current_profession"])
-    data_dict["Student Count"].append(data["student_count"])
-    data_dict["Student Location"].append(data["student_location"])
+# Iterate through each collection and obtain the feedback documents into a dataframe style dictionary
 
-# for i in data_dict:
-#     print(i)
-#     print(len(data_dict[i]))
+for collection in collections:
+  collection_ref = db.collection(collection)
 
-final_data = pd.DataFrame(data_dict)
-print(final_data)
+  # Checks if the collection is empty
+
+  try:
+    doc_ref = collection_ref.document("row0")
+  except:
+    print("No document in collection", collection)
+
+  # Gets all the keys in the document
+
+  all_keys = doc_ref.get().to_dict().keys()
+
+  # Gets all the keys that contain the word "feedback" and removes the None values
+
+  feedback_keys = [key if "feedback" in key else None for key in all_keys]
+  feedback_keys = [key for key in feedback_keys if key is not None]
+
+  # Creates a dictionary of arrays with the feedback keys as the keys and the feedback as the values
+
+  feedback_documents = {}
+  for document in collection_ref.stream():
+    for key in feedback_keys:
+      if key in feedback_documents:
+        feedback_documents[key].append(document.to_dict()[key])
+      else:
+        feedback_documents[key] = [document.to_dict()[key]]
+
+  # Adds the dictionary to the feedback dictionary
+
+  feedback_dic[collection] = feedback_documents
+
+# Print out the feedback for each document in each collection
+
+for collection in collections:
+  feedback_form = feedback_dic[collection]
+  keys = list(feedback_form.keys())
+
+  for i in range(len(feedback_form[keys[0]])):
+    print("Document", i)
+
+    for key in keys:
+      print(feedback_form.get(key)[i])

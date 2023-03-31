@@ -49,6 +49,10 @@ def get_data(_db):
 
     return pd.DataFrame(data_dict)
 
+@st.cache_data
+def get_forms_data(_db):
+    forms = []
+
 
 # Set page title and favicon
 st.set_page_config(page_title="Homepage", page_icon="assets/EENC-logo.png", layout="wide")
@@ -57,6 +61,7 @@ st.set_page_config(page_title="Homepage", page_icon="assets/EENC-logo.png", layo
 key_dict = json.loads(st.secrets['textkey'])
 st.session_state["database_connection"] = get_database(key_dict)
 st.session_state["master_data"] = get_data(st.session_state["database_connection"])
+
 print(st.session_state["master_data"])
 
 # Load the data
