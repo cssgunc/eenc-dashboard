@@ -3,9 +3,9 @@
 // function temp() {
 //   const scriptProperties = PropertiesService.getScriptProperties();
 //   scriptProperties.setProperties({
-//     email: "firebase-adminsdk-qn1ul@eenc-e1241.iam.gserviceaccount.com",
-//     key: "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDW6WRbihrsB1vA\n8/toMQVvwiHPIqWLZlWRGTD/brzeThKUvohJ9oDsKE/oVlMZPB/NOrSuNCXzjIdd\nbhLvj1NSQ/+H6591AJfY86vb9BgkVyEdIaYf7aCi66WEstI286Aoa0ZVmCqWXVg9\nZYQKTtVOkrjNTFdT3/tZND43Wkl8mgA8zkFevDaBlr+rKL3HZtVXxvut71Li+jLf\nKPD6aEH1bGBKU1Uy35ddXBYv+Hz59R6XVnrKM4PY609hjhK0Rtc4SIYhtLAyn2ZA\nfwkKpOWAryoNycJdkmtoeIlksevptphETO5fZlgdKc5Ne86Rf4bC6LNmcPGA89K9\nvruSNBkNAgMBAAECggEAFNQUPxYiO20P8W8Ayj1/n2M0z6E1/IENTfC5FPU9WY/Y\nSsSXuBArhbfEEGpwlB0fOYHoPPHrTUos9fS5e31sJkIjPWysMzS8tfDeLFHhFrSM\np9W5BsmK+TJv0KD1sRAcUSgeB75yci9w+98fOuu4NKARSD31c+v2ejpb+HvIBeR7\nHungyQ3bT1EysO32U7EIJ+c3dqDaN+RbarMHzpFOxhZIAy3Zkpl2s64fBTTBtxHd\nmYlPeytQLinNRnaHU1Ye/ffgii3iP5FQdXLppgxglVsKGAZAMadegy/Chp/ieVd8\n1pAULVm7ISnvHZAzjK7zUCob/d5wm7Uz3sdbWbRsqQKBgQDzAyImLKgLau97+4qq\nba1U2tc77Zn51eoNxVuPXDi9nFitZkCPW6LfaFwbtXUrhIoea80skrmDiIlXbEF1\nxP4XIYZg2//CmzcvAlv5ckDPUDgxNsQjZvAOt8y1Oy8U8PMjl5FC/PWj792ixjjE\nN7XDvnP8yauu7DNIUC/mRobLawKBgQDiZco77xUa1rGAYUE2Bs2csioF5260rJUZ\nGIK3Zxm25gEnkiWzr3yz0OLJH83L7YLNR/iR/XQ5Orct8Jl9qeKvco3G+Q/rSr+1\nWZHOeOuAYQoGsbOyWIcsftPOfOSr8PZH6xJkRxGlTwe0gR1d9KKaDhZ9kus1PgYX\ncnlahEIDZwKBgDZtHzrZiZF1E8n63mWpRsbYdJgxcOjpphALgaQsDXE6EQpU+mSh\nK2tJ3kc+bs2eU6jYkA1Jl08ER25TCp4rzpSzp3sOCsw1IzjeGGdX1XgZCVzMXUVo\nip9hPvHgHX1dMbdo/Nm5+fILiOIp7xDTQVxjzWpyaIc2042AmBnE9e+dAoGAfSnZ\nTJk5CcV4DIm4C65nLiIxqWHximF/bIhofAy74qn2KXJa9aQnRSJOvvKeTAfbMLKB\ncfS1tI4Jh5Rkx1yMvoKOb1pyuppwskn6mjOvvyHm8Rx9RDQ9RxQ29QmHQqfNAKWt\nXVMNJl8y21AmdDMzUghH1tTKxHyt0XiwLqK//DECgYAkIg8tiSBK+hBjSYd822AQ\ndnf9gU5Egg4ptNh78N3ybl6uAnAwP1vZ3nitIW1HCINLvv8PrRMi7hxC/Hl0Cmyc\nN87RK+fBIpe4yEwIyC6AfxcUk6Hr+pXZ05t7f0bS2hDYP9zILNtZQ+CoiKcHGaub\n/JbZylgGtITf1Ecxz+aWEw==\n-----END PRIVATE KEY-----\n",
-//     project_id: "eenc-e1241"
+//     email: "insert_email_here",
+//     key: "insert_key_here",
+//     project_id: "insert_project_id_here",
 //   });
 
 //   console.log(PropertiesService.getScriptProperties().getProperties());
