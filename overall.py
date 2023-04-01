@@ -51,9 +51,48 @@ def get_data(_db):
 
     return pd.DataFrame(data_dict)
 
-@st.cache_data
-def get_forms_data(_db):
-    forms = []
+@st.cache_data(ttl = 1800) # Caches the updates and forces an update every 30 minutes
+def get_feedback_data(_db):
+    collections = [c.id for c in _db.collections()]
+    collections.remove("master_data")
+    feedback_dic = {}
+
+    # Iterate through each collection and obtain the feedback documents into a dataframe style dictionary
+
+    for collection in collections:
+        collection_ref = _db.collection(collection)
+
+        # Checks if the collection is empty
+
+        try:
+            doc_ref = collection_ref.document("row0")
+        except:
+            print("No document in collection", collection)
+
+    # Gets all the keys in the document
+
+        all_keys = doc_ref.get().to_dict().keys()
+
+    # Gets all the keys that contain the word "feedback" and removes the None values
+
+        feedback_keys = [key if "feedback" in key else None for key in all_keys]
+        feedback_keys = [key for key in feedback_keys if key is not None]
+
+        # Creates a dictionary of arrays with the feedback keys as the keys and the feedback as the values
+
+        feedback_documents = {}
+        for document in collection_ref.stream():
+            for key in feedback_keys:
+                if key in feedback_documents:
+                    feedback_documents[key].append(document.to_dict()[key])
+                else:
+                    feedback_documents[key] = [document.to_dict()[key]]
+
+        # Adds the dictionary to the feedback dictionary
+        feedback_dic[collection] = feedback_documents
+    
+    return feedback_dic
+
 
 
 # Set page title and favicon
@@ -62,9 +101,12 @@ st.set_page_config(page_title="Homepage", page_icon="assets/EENC-logo.png", layo
 # Authenticate to Firestore with the JSON account key.
 key_dict = json.loads(st.secrets['textkey'])
 st.session_state["database_connection"] = get_database(key_dict)
+
+# Sets the master data state
 st.session_state["master_data"] = get_data(st.session_state["database_connection"])
 
-print(st.session_state["master_data"])
+#Sets the feedback data state
+st.session_state["feedback_data"] = get_feedback_data(st.session_state["database_connection"])
 
 # Load the data
 # Data from Streamlit state
