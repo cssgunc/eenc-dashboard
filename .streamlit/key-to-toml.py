@@ -1,8 +1,12 @@
 import toml
+import os
 
 output_file = "secrets.toml"
 
-with open("firestore-key.json") as json_file:
+abs_path = os.path.abspath(".streamlit/firestore-key.json")
+print(abs_path)
+
+with open(abs_path) as json_file:
     json_text = json_file.read()
 
 config = {"textkey": json_text}
