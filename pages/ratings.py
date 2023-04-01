@@ -1,7 +1,6 @@
 import pandas as pd
 import streamlit as st
 import plotly.express as px
-from data.feedback_data import feedback_dic
 import random
 
 # Set page title and favicon
@@ -13,7 +12,7 @@ st.set_page_config(page_title="Ratings",
 
 # Data from Streamlit state
 data = st.session_state["master_data"]
-feedback_data = feedback_dic
+feedback_data = st.session_state["feedback_data"]
 
 # replace 'N/A' with NaN
 data = data.replace('N/A', float('nan'))
