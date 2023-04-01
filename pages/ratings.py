@@ -33,9 +33,7 @@ st.sidebar.caption("Need more help? Refer to our documentation here")
 
 if form_name != 'All':
     data = data[data['Form Name'] == form_name]
-    collection_name = form_name.replace('_', ' ').title().replace("Test", "TEST")
-    print(collection_name)
-    feedback_data = feedback_data[collection_name]
+    feedback_data = feedback_data[form_name]
 
 # Main content
 st.title("EENC Ratings Summary")

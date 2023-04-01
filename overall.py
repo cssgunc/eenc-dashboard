@@ -54,7 +54,7 @@ def get_data(_db):
 @st.cache_data(ttl = 1800) # Caches the updates and forces an update every 30 minutes
 def get_feedback_data(_db):
     collections = [c.id for c in _db.collections()]
-    print(collections)
+
     collections.remove("master_data")
     feedback_dic = {}
 
@@ -90,7 +90,8 @@ def get_feedback_data(_db):
                     feedback_documents[key] = [document.to_dict()[key]]
 
         # Adds the dictionary to the feedback dictionary
-        feedback_dic[collection] = feedback_documents
+        print(collection.lower().replace(" ", "_", 1000))
+        feedback_dic[collection.lower().replace(" ", "_", 1000)] = feedback_documents
     
     return feedback_dic
 
