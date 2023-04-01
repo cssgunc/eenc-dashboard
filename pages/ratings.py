@@ -1,13 +1,19 @@
 import pandas as pd
 import streamlit as st
 import plotly.express as px
+from data.feedback_data import feedback_dic
+import random
 
+# Set page title and favicon
+st.set_page_config(page_title="Ratings",
+                   page_icon="assets/EENC-logo.png", layout="wide")
 
 # Load the data
 # data = pd.read_csv("data/data.csv")
 
 # Data from Streamlit state
 data = st.session_state["master_data"]
+feedback_data = feedback_dic
 
 # replace 'N/A' with NaN
 data = data.replace('N/A', float('nan'))
@@ -16,10 +22,6 @@ data = data.replace('N/A', float('nan'))
 primary_color = "#195E4C"
 secondary_color = "#3C9E8D"
 text_color = "#6D7183"
-
-# Set page title and favicon
-st.set_page_config(page_title="Ratings",
-                   page_icon="assets/EENC-logo.png", layout="wide")
 
 # Logo
 st.image("assets/EENC-logo.png", width=100)
@@ -32,6 +34,9 @@ st.sidebar.caption("Need more help? Refer to our documentation here")
 
 if form_name != 'All':
     data = data[data['Form Name'] == form_name]
+    collection_name = form_name.replace('_', ' ').title().replace("Test", "TEST")
+    print(collection_name)
+    feedback_data = feedback_data[collection_name]
 
 # Main content
 st.title("EENC Ratings Summary")
@@ -39,10 +44,10 @@ st.write("This page displays a summary of ratings for EENC courses. Use the filt
 st.markdown('---')
 
 
-def generate_rating_chart(column_name, chart_title):
+def generate_rating_chart(column_name, chart_title, feedback_type=None):
     column_data = data[column_name]
     column_data = column_data.astype(float)
-    column_data = data[column_name].fillna(0)
+    column_data = data[column_name].fillna(3)
     average_rating = round(column_data.mean(), 2)
     mode_rating = column_data.mode()[0] if not column_data.empty else 0
     median_rating = column_data.median() if not column_data.empty else 0
@@ -77,17 +82,23 @@ def generate_rating_chart(column_name, chart_title):
             with col2:
                 st.plotly_chart(fig, use_container_width=True)
 
+        if feedback_type in feedback_data and len(feedback_data[feedback_type]) > 0:
+            st.write("Random feedback:")
+            random_feedback = random.sample(feedback_data[feedback_type], min(3, len(feedback_data[feedback_type])))
+            for feedback in random_feedback:
+                st.write(f"- {feedback}")
+
 # Course Rating
-generate_rating_chart('Course Rating', 'On a scale of 1 to 5, how do you rate this course overall?')
+generate_rating_chart('Course Rating', 'On a scale of 1 to 5, how do you rate this course overall?','general_feedback')
 
 # Instructor Rating
-generate_rating_chart('Instructor Rating', 'On a scale of 1 to 5, how do you rate the instructor of this course?')
+generate_rating_chart('Instructor Rating', 'On a scale of 1 to 5, how do you rate the instructor of this course?','instructor_feedback')
 
 # Accessibility Rating
-generate_rating_chart('Accessibility Rating', 'How accessible do you find this course?')
+generate_rating_chart('Accessibility Rating', 'How accessible do you find this course?','accessibility_feedback')
 
 # Navigation Rating
-generate_rating_chart('Navigation Rating', 'On a scale of 1 to 5, how easy was it to navigate this course?')
+generate_rating_chart('Navigation Rating', 'On a scale of 1 to 5, how easy was it to navigate this course?','structure_feedback')
 
 # Improvement Efforts Rating
 generate_rating_chart('Improvement Efforts', 'On a scale of 1 to 5, how satisfied are you with the improvement efforts made after feedback?')

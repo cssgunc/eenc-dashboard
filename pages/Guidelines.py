@@ -9,6 +9,11 @@ st.set_page_config(page_title="Ratings",
 
 data = pd.read_csv("data/data.csv")
 
+# Data from Streamlit state
+# data = st.session_state['master_data']
+#data = st_data
+# data = data.replace('N/A', float('nan'))
+
 st.image("assets/EENC-logo.png", width = 100)
 
 

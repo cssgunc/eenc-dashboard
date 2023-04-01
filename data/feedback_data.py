@@ -3,7 +3,6 @@ from google.oauth2 import service_account
 import json
 import os
 import pandas as pd
-import streamlit as st
 
 # Get the directory of the file with secret key and firestore information
 secret_file = os.getcwd() + "/.streamlit/firestore-key.json"
@@ -57,5 +56,3 @@ for collection in collections:
 
   feedback_dic[collection] = feedback_documents
 
-st.table(feedback_dic)
-print(feedback_dic)
