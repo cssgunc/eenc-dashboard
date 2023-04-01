@@ -51,6 +51,7 @@ def generate_rating_chart(column_name, chart_title, feedback_type=None):
 
     if average_rating == 0 and mode_rating == 0 and median_rating == 0:
         print("no available data for " + column_name)
+        return
     else:
         fig = px.histogram(data, x=column_name, nbins=5, opacity=1, color_discrete_sequence=[secondary_color], height=350)
 
@@ -80,10 +81,17 @@ def generate_rating_chart(column_name, chart_title, feedback_type=None):
                 st.plotly_chart(fig, use_container_width=True)
 
         if feedback_type in feedback_data and len(feedback_data[feedback_type]) > 0:
-            st.write("Random feedback:")
-            random_feedback = random.sample(feedback_data[feedback_type], min(3, len(feedback_data[feedback_type])))
-            for feedback in random_feedback:
-                st.write(f"- {feedback}")
+            feedback_list = [feedback for feedback in feedback_data[feedback_type] if feedback.lower() != "n/a"]
+            if len(feedback_list) > 0:
+                st.write("Attendee feedback")
+                num_columns = min(3, len(feedback_list))
+                columns = st.columns(num_columns)
+                for i, feedback in enumerate(feedback_list[:num_columns]):
+                    with columns[i]:
+                        st.info(f"{feedback}")
+
+
+        st.markdown("   ")
 
 # Course Rating
 generate_rating_chart('Course Rating', 'On a scale of 1 to 5, how do you rate this course overall?','general_feedback')
