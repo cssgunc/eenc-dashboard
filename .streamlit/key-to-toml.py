@@ -3,7 +3,7 @@ import os
 
 output_file = "secrets.toml"
 
-abs_path = os.path.abspath(".streamlit/firestore-key.json")
+abs_path = os.path.abspath("firestore-key.json")
 print(abs_path)
 
 with open(abs_path) as json_file:
