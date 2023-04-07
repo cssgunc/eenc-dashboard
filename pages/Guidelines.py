@@ -3,8 +3,10 @@ import numpy as np
 import streamlit as st
 import matplotlib as mat
 import matplotlib.pyplot as plt
+import plotly.express as px
+
 # Set page title and favicon
-st.set_page_config(page_title="Ratings",
+st.set_page_config(page_title="Guidelines",
                    page_icon="assets/EENC-logo.png", layout="wide")
 
 data = pd.read_csv("data/data.csv")
@@ -12,7 +14,7 @@ data = pd.read_csv("data/data.csv")
 # Data from Streamlit state
 # data = st.session_state['master_data']
 #data = st_data
-# data = data.replace('N/A', float('nan'))
+
 
 st.image("assets/EENC-logo.png", width = 100)
 
@@ -69,6 +71,7 @@ perc_vhigh_before = np.nan_to_num(100*(counts_before["Very High"]/total_students
 perc_vhigh_after = np.nan_to_num(100*(counts_after["Very High"]/total_students))
 
 #Figure 1: Scatter plot and lines
+
 with st.container():
     col1, col2 = st.columns([1, 3.75])
     with col1:
@@ -76,30 +79,37 @@ with st.container():
         st.metric(label="High %", value=f"{round(perc_high_after, 1)}%", delta=f"{round(perc_high_after - perc_high_before, 1)}%")
         st.metric(label="Very High %", value=f"{round(perc_vhigh_after, 1)}%", delta=f"{round(perc_vhigh_after - perc_vhigh_before, 1)}%")
     with col2:
-        fig, ax = plt.subplots()
-        size = pd.concat([counts_before, counts_after])*25
-        x = 5 * ["Before"] + 5 * ["After"]
-        y = ["Very Low", "Low", "Average", "High", "Very High"] * 2
-        ax.scatter(x, y, s=size.values, color=secondary_color, alpha=0.5)
-        ax.set_xlabel("When Education is Received")
-        ax.set_ylabel("Guidelines Rating")
-        ax.margins(x=0.4, y=0.2)
-        green_circle = mat.lines.Line2D([], [], color="white", marker='o', markerfacecolor=secondary_color, alpha=0.5, markersize=10)
-        ax.legend([green_circle], ['Students Population'], loc="lower right")
-        annotations = np.nan_to_num(pd.concat([counts_before, counts_after]))
-        min_text_offset = 20
-        text_offset = np.sqrt(max(size.values)) if np.sqrt(max(size.values)) > min_text_offset else min_text_offset
-        for xi, yi, text in zip(x, y, annotations):
-            if text != 0:
-                ax.annotate(int(text), xy=(xi, yi), xycoords='data', xytext=(text_offset, 0), textcoords='offset points', bbox=dict(boxstyle="square,pad=0.3", facecolor="#1C00ff00", edgecolor=text_color))
-        st.pyplot(fig)
+        data = pd.DataFrame({
+            "When Education is Received": 5 * ["Before"] + 5 * ["After"],
+            "Guidelines Rating": ["Very Low", "Low", "Average", "High", "Very High"] * 2,
+            "Counts": pd.concat([counts_before, counts_after]).reset_index(drop=True)
+        })
+        data = data.dropna() # drop rows with NaN values
+        data["Size"] = data["Counts"] * 10
+        fig = px.scatter(data, x="When Education is Received", y="Guidelines Rating", size="Size",
+                         color_discrete_sequence=[secondary_color], opacity=1,
+                         labels={"When Education is Received": "When Education is Received", "Guidelines Rating": "Guidelines Rating"},
+                         hover_data={"Counts": True, "Size": False})
+        fig.update_traces(marker=dict(line=dict(width=1, color='DarkSlateGrey')), selector=dict(mode='markers'))
+        fig.update_layout(
+            legend=dict(traceorder='normal'),
+            xaxis=dict(tickfont=dict(size=10)),
+            yaxis=dict(tickfont=dict(size=10)),
+            margin=dict(l=0, r=0, t=50, b=0),
+            width=1200,
+            height=400
+        )
+        st.plotly_chart(fig, use_container_width=True)
 
+
+
+    
 st.markdown('   ')
 st.subheader("How does the overall pattern change?")
 st.markdown("Below shows the overall pattern of students' guidelines.")
 
 #Figure 2: bar plot
-fig, ax = plt.subplots()
+
 edu_time = ["Before", "After"]
 y = {
     "Very Low": [counts_before["Very Low"], counts_after["Very Low"]],
@@ -109,30 +119,26 @@ y = {
     "Very High": [counts_before["Very High"], counts_after["Very High"]]
 }
 barcolor = ['#42B6ED', '#42DBED', '#45F7DA', '#4AE19C', '#3C9E8D']
-x = np.array([0, 0.7])
-width = 0.1
-multiplier = 0
-i = 0
-#create group bar chart
+
+data = []
 for group, barvalue in y.items():
-    offset = width * multiplier
-    p = ax.bar(x + offset, barvalue, width, label=group, color=barcolor[i])
-    multiplier += 1
-    i += 1
-#create labels for bar chart
-labels = [int(i) for tup in zip(np.nan_to_num(counts_before.values), np.nan_to_num(counts_after.values)) for i in tup]
-rects = ax.patches
-for rect, label in zip(rects, labels):
-    height = rect.get_height()
-    ax.text(
-        np.nan_to_num(rect.get_x()) + rect.get_width() / 2, np.nan_to_num(height), label, ha="center", va="bottom"
-    )
-ax.set_xticks(x + 2*width, edu_time)
-ax.margins(x=0.15, y=0.1)
-ax.set_xlabel("When Education is Received")
-ax.set_ylabel("Number of Participants", labelpad=10)
-ax.legend(fontsize="small", loc="upper center")
-st.pyplot(fig)
+    data.extend([{"When Education is Received": edu_time[i], "Guidelines Rating": group, "Counts": barvalue[i]} for i in range(len(edu_time))])
+
+fig = px.bar(data, x="When Education is Received", y="Counts", color="Guidelines Rating", text="Counts",
+             color_discrete_sequence=barcolor, barmode="group", opacity=1,
+             labels={"When Education is Received": "When Education is Received", "Counts": "Number of Participants", "Guidelines Rating": "Guidelines Rating"},
+             hover_data={"Counts": True})
+
+fig.update_layout(
+    xaxis=dict(tickfont=dict(size=10)),
+    yaxis=dict(tickfont=dict(size=10)),
+    legend=dict(traceorder='normal')
+)
+
+with st.container():
+    st.plotly_chart(fig)
+
+
 
 # Add CSS to customize text colors
 st.markdown(f"""

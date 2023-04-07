@@ -28,13 +28,18 @@ st.title('Demographics Summary')
 st.markdown('This page displays a summary of demographics for EENC courses. Use the filter on the left to customize the results.')
 st.markdown("---")
 #Sidebar
-st.sidebar.title("Filters")
-form_name = st.sidebar.selectbox("Form Name", ['All'] + sorted(data['Form Name'].unique()))
+st.sidebar.title("Filter")
+unique_form_names = sorted(data['Form Name'].unique())
+cleaned_form_names = [name.replace('test_', '').replace('_', ' ').title() for name in unique_form_names]
+
+form_name = st.sidebar.selectbox("Select Form Name", ['All'] + cleaned_form_names)
+
 st.sidebar.caption("Need more help? Refer to our documentation here")
 
-#Filter the Data
-if form_name != "All":
-    data = data[data['Form Name'] == form_name]
+if form_name != 'All':
+    formatted_form_name = f"test_{form_name.lower().replace(' ', '_')}"
+    data = data[data['Form Name'] == formatted_form_name]
+    
 
 #Profession
 profession = data['Current Profession']
