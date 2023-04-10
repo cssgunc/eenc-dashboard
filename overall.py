@@ -113,6 +113,8 @@ st.session_state["feedback_data"] = get_feedback_data(st.session_state["database
 # Load the data
 # Data from Streamlit state
 data = st.session_state["master_data"]
+feedback = st.session_state["feedback_data"]
+
 
 # replace 'N/A' with NaN
 data = data.replace('N/A', float('nan'))
@@ -200,6 +202,55 @@ col4.metric("Avg. Navigation", round(data['Navigation Rating'].mean(), 2))
 st.info("All average ratings are calculated out of 5.")
 
 st.markdown('   ')
+
+st.header("Feedback")
+
+instructor_feedback = []
+general_feedback = []
+accessibility_feedback = []
+
+for key, value in feedback.items():
+    if 'instructor_feedback' in value:
+        instructor_feedback.extend(value['instructor_feedback'])
+    if 'general_feedback' in value:
+        general_feedback.extend(value['general_feedback'])
+    if 'accessibility_feedback' in value:
+        accessibility_feedback.extend(value['accessibility_feedback'])
+
+if form_name == 'All':
+    st.header("Instructor Feedback")
+    for feedback in instructor_feedback:
+        if len(feedback.lower()) < 5:
+            continue
+        st.write(feedback)
+    st.header("General Feedback")
+    for feedback in general_feedback:
+        if len(feedback.lower()) < 5:
+            continue
+        st.write(feedback)
+    st.header("Accessibility Feedback")
+    for feedback in accessibility_feedback:
+        if len(feedback.lower()) < 5:
+            continue
+        st.write(feedback)
+else: # this should help print based on the form name given but prob doesnt work bc of the first feedback for loop
+    st.header("Instructor Feedback")
+    for feedback in instructor_feedback:
+        if len(feedback.lower()) < 5:
+            continue
+        st.write(feedback)
+    st.header("General Feedback")
+    for feedback in general_feedback:
+        if len(feedback.lower()) < 5:
+            continue
+        st.write(feedback)
+    st.header("Accessibility Feedback")
+    for feedback in accessibility_feedback:
+        if len(feedback.lower()) < 5:
+            continue
+        st.write(feedback)
+
+
 st.markdown('   ')
 
 
