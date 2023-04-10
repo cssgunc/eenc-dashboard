@@ -132,12 +132,16 @@ text_color = "#6D7183"
 
 # Sidebar
 st.sidebar.title("Filters")
-form_name = st.sidebar.selectbox("Form Name", ['All'] + sorted(data['Form Name'].unique()))
+unique_form_names = sorted(data['Form Name'].unique())
+cleaned_form_names = [name.replace('test_', '').replace('_', ' ').title() for name in unique_form_names]
+
+form_name = st.sidebar.selectbox("Select Form Name", ['All'] + cleaned_form_names)
+
 st.sidebar.caption("Need more help? Refer to our documentation here")
 
-# Filter the data
 if form_name != 'All':
-    data = data[data['Form Name'] == form_name]
+    formatted_form_name = f"test_{form_name.lower().replace(' ', '_')}"
+    data = data[data['Form Name'] == formatted_form_name]
 
 
 # Check that this translates over guidelines qualitative values to quantitative
@@ -158,8 +162,12 @@ col2.metric("No. of People Reached", str(len(data)))
 profession_count = data['Current Profession'].value_counts()
 max_attendees = profession_count.max()
 highest_attendees_profession = profession_count[profession_count == max_attendees].index.tolist()
-highest_attendees_profession_str = ", ".join(highest_attendees_profession)
+if not highest_attendees_profession:
+    highest_attendees_profession_str = "None"
+else:
+    highest_attendees_profession_str = ", ".join(highest_attendees_profession)
 col3.metric("Highest Attendee Profession", highest_attendees_profession_str)
+
 
 
 c1, c2 = st.columns((7,3))
@@ -171,10 +179,30 @@ with c2:
         switch_page("Guidelines")
 
 col2, col3, col4 = st.columns(3)
-
-col2.metric("Avg. Improvement Efforts", round(data["Improvement Efforts"].mean(), 2))
-col3.metric("Avg. Guidelines Before", round(guidelines_before.mean(),2))
-col4.metric("Avg. Guidelines After", round(guidelines_after.mean(),2))
+improvement_efforts_mean = data['Improvement Efforts'].mean()
+guidelines_before_mean = guidelines_before.mean()
+guidelines_after_mean = guidelines_after.mean()
+num_cols = 0
+if not np.isnan(improvement_efforts_mean):
+    num_cols += 1
+if not np.isnan(guidelines_before_mean):
+    num_cols += 1
+if not np.isnan(guidelines_after_mean):
+    num_cols += 1
+if num_cols > 0:
+    cols = st.columns(num_cols)
+    col_idx = 0
+    if not np.isnan(improvement_efforts_mean):
+        cols[col_idx].metric("Avg. Improvement Efforts", round(improvement_efforts_mean, 2))
+        col_idx += 1
+    if not np.isnan(guidelines_before_mean):
+        cols[col_idx].metric("Avg. Guidelines Before", round(guidelines_before_mean, 2))
+        col_idx += 1
+    if not np.isnan(guidelines_after_mean):
+        cols[col_idx].metric("Avg. Guidelines After", round(guidelines_after_mean, 2))
+        col_idx += 1
+else:
+    st.write("No data available")
 
 st.info("All average scales are calculated out of 5.")
 
@@ -191,13 +219,41 @@ with c2:
         switch_page("ratings")
 
 
-# total number of respondents, course rating, average ratings
-# put some stuff that links to mel's rating page
-col1, col2, col3, col4 = st.columns(4)
-col1.metric("Avg. Course", round(data['Course Rating'].mean(), 2))
-col2.metric("Avg. Instructor", round(data['Instructor Rating'].mean(), 2))
-col3.metric("Avg. Accessibility", round(data['Accessibility Rating'].mean(), 2))
-col4.metric("Avg. Navigation", round(data['Navigation Rating'].mean(), 2))
+course_rating_mean = data['Course Rating'].mean()
+instructor_rating_mean = data['Instructor Rating'].mean()
+accessibility_rating_mean = data['Accessibility Rating'].mean()
+navigation_rating_mean = data['Navigation Rating'].mean()
+
+num_cols = 0
+if not np.isnan(course_rating_mean):
+    num_cols += 1
+if not np.isnan(instructor_rating_mean):
+    num_cols += 1
+if not np.isnan(accessibility_rating_mean):
+    num_cols += 1
+if not np.isnan(navigation_rating_mean):
+    num_cols += 1
+
+if num_cols > 0:
+    cols = st.columns(num_cols)
+    col_idx = 0
+    if not np.isnan(course_rating_mean):
+        cols[col_idx].metric("Avg. Course", round(course_rating_mean, 2))
+        col_idx += 1
+    if not np.isnan(instructor_rating_mean):
+        cols[col_idx].metric("Avg. Instructor", round(instructor_rating_mean, 2))
+        col_idx += 1
+    if not np.isnan(accessibility_rating_mean):
+        cols[col_idx].metric("Avg. Accessibility", round(accessibility_rating_mean, 2))
+        col_idx += 1
+    if not np.isnan(navigation_rating_mean):
+        cols[col_idx].metric("Avg. Navigation", round(navigation_rating_mean, 2))
+else:
+    st.write("No ratings available.")
+
+
+    
+
 
 st.info("All average ratings are calculated out of 5.")
 
