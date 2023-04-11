@@ -56,3 +56,4 @@ for collection in collections:
 
   feedback_dic[collection] = feedback_documents
 
+print(feedback_dic)

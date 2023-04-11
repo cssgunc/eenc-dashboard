@@ -11,6 +11,7 @@ pandas = "*"
 google-cloud-firestore = "*"
 bokeh = "*"
 numpy = "*"
+streamlit-scrollable-textbox = "*"
 
 [dev-packages]
 

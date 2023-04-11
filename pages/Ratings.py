@@ -1,6 +1,7 @@
 import pandas as pd
 import streamlit as st
 import plotly.express as px
+from streamlit_extras.switch_page_button import switch_page
 import random
 
 # Set page title and favicon
@@ -46,8 +47,7 @@ st.title("EENC Ratings Summary")
 st.write("This page displays a summary of ratings for EENC courses. Use the filter on the left to customize the results.")
 st.markdown('---')
 
-
-def generate_rating_chart(column_name, chart_title, feedback_type=None):
+def generate_rating_chart(column_name, chart_title, feedback_type=None, index=0):
     column_data = data[column_name]
     column_data = column_data.astype(float)
     column_data = data[column_name].fillna(3)
@@ -88,7 +88,13 @@ def generate_rating_chart(column_name, chart_title, feedback_type=None):
         if feedback_type in feedback_data and len(feedback_data[feedback_type]) > 0:
             feedback_list = [feedback for feedback in feedback_data[feedback_type] if feedback.lower() != "n/a"]
             if len(feedback_list) > 0:
-                st.write("Attendee feedback")
+                c3, c4 = st.columns((7,3))
+                with c3:
+                    st.write("Attendee feedback")
+                with c4:
+                    guidelines_button = st.button("See all feedback", key=f"guidelines_button_{index}")
+                    if guidelines_button:
+                        switch_page("Feedback")
                 num_columns = min(3, len(feedback_list))
                 columns = st.columns(num_columns)
                 for i, feedback in enumerate(feedback_list[:num_columns]):
@@ -100,22 +106,22 @@ def generate_rating_chart(column_name, chart_title, feedback_type=None):
 
 
 # Course Rating
-generate_rating_chart('Course Rating', 'On a scale of 1 to 5, how do you rate this course overall?','general_feedback')
+generate_rating_chart('Course Rating', 'On a scale of 1 to 5, how do you rate this course overall?','general_feedback', 1)
 
 # Instructor Rating
-generate_rating_chart('Instructor Rating', 'On a scale of 1 to 5, how do you rate the instructor of this course?','instructor_feedback')
+generate_rating_chart('Instructor Rating', 'On a scale of 1 to 5, how do you rate the instructor of this course?','instructor_feedback', 2)
 
 # Accessibility Rating
-generate_rating_chart('Accessibility Rating', 'How accessible do you find this course?','accessibility_feedback')
+generate_rating_chart('Accessibility Rating', 'How accessible do you find this course?','accessibility_feedback', 3)
 
 # Navigation Rating
-generate_rating_chart('Navigation Rating', 'On a scale of 1 to 5, how easy was it to navigate this course?','structure_feedback')
+generate_rating_chart('Navigation Rating', 'On a scale of 1 to 5, how easy was it to navigate this course?','structure_feedback', 4)
 
 # Improvement Efforts Rating
-generate_rating_chart('Improvement Efforts', 'On a scale of 1 to 5, how satisfied are you with the improvement efforts made after feedback?')
+generate_rating_chart('Improvement Efforts', 'On a scale of 1 to 5, how satisfied are you with the improvement efforts made after feedback?', 5)
 
 # Sharing Interest Rating
-generate_rating_chart('Sharing Interest', 'On a scale of 1 to 5, how interested are you in sharing what you learned with others?')
+generate_rating_chart('Sharing Interest', 'On a scale of 1 to 5, how interested are you in sharing what you learned with others?', 6)
 
 # Add CSS to customize text colors
 st.markdown(f"""
@@ -128,6 +134,9 @@ st.markdown(f"""
         }}
         h1, h2, h3, h4 {{
             color: {primary_color};
+        }}
+        button {{
+            float: right;
         }}
     </style>
 """, unsafe_allow_html=True)
