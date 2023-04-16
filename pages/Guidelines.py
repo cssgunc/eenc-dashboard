@@ -9,24 +9,33 @@ import plotly.express as px
 st.set_page_config(page_title="Guidelines",
                    page_icon="assets/EENC-logo.png", layout="wide")
 
-data = pd.read_csv("data/data.csv")
+# data = pd.read_csv("data/data.csv")
 
 # Data from Streamlit state
-# data = st.session_state['master_data']
+data = st.session_state['master_data']
 #data = st_data
 
 
 st.image("assets/EENC-logo.png", width = 100)
+unique_form_names = sorted(data['Form Name'].unique())
+cleaned_form_names = [name.replace('test_', '').replace('_', ' ').title() for name in unique_form_names]
+
 
 
 # sidebar
 st.sidebar.title("Filters")
-form_name = st.sidebar.selectbox("Form Name", ['All'] + sorted(data['Form Name'].unique()))
-location = st.sidebar.radio("Student Location", ["All", "Mix of Areas", "Rural", "Urban", "Suburban"])
-st.sidebar.caption("Need more help? Refer to our documentation here")
+form_name = st.sidebar.selectbox("Select Form Name", ['All'] + cleaned_form_names)
 # Filter the data
 if form_name != 'All': #event name
-    data = data[data["Form Name"] == form_name]
+    formatted_form_name = f"test_{form_name.lower().replace(' ', '_')}"
+    data = data[data['Form Name'] == formatted_form_name]
+# Get unique locations and remove "None"
+unique_locations = data['Student Location'].dropna().unique()
+# Group "Mix of Areas" and "A Mix of Areas"
+unique_locations = np.where(unique_locations=="Mix of Areas", "A Mix of Areas", unique_locations)
+unique_locations = data['Student Location'].dropna().replace({'A Mix of Areas': 'Mix of Areas'}).unique()
+location = st.sidebar.radio("Student Location", ["All"] + list(unique_locations))
+st.sidebar.caption("Need more help? Refer to our documentation here")
 if location == "Mix of Areas":
     data_Mix = data[data["Student Location"] == location]
     data_AMix = data[data["Student Location"] == "A Mix of Areas"]
@@ -55,9 +64,12 @@ guidelines_before = data['Guidelines Before']
 guidelines_after = data['Guidelines After']
 guidelines_scale = {"Very Low": 1, "Low": 2, "Average": 3, "High": 4, "Very High": 5}
 
-counts_before = guidelines_before.value_counts().reindex(["Very Low", "Low", "Average", "High", "Very High"])
-counts_after = guidelines_after.value_counts().reindex(["Very Low", "Low", "Average", "High", "Very High"])
-
+# convert float values to categories
+categories_before = pd.cut(guidelines_before, bins=[0.0, 1.0, 2.0, 3.0, 4.0, 5.0], labels=["Very Low", "Low", "Average", "High", "Very High"])
+categories_after = pd.cut(guidelines_after, bins=[0.0, 1.0, 2.0, 3.0, 4.0, 5.0], labels=["Very Low", "Low", "Average", "High", "Very High"])
+# count the categories
+counts_before = categories_before.value_counts().reindex(["Very Low", "Low", "Average", "High", "Very High"])
+counts_after = categories_after.value_counts().reindex(["Very Low", "Low", "Average", "High", "Very High"])
 st.header("Graphs & Trends")
 st.subheader("How do guidelines change before and after?")
 st.markdown("*Circle size indicates number of population; Numbers of students are shown in the box.")
@@ -65,10 +77,11 @@ st.markdown("")
 
 #calculate stats
 total_students = len(guidelines_after)
-perc_high_before = np.nan_to_num(100*(counts_before["High"]/total_students))
-perc_high_after = np.nan_to_num(100*(counts_after["High"]/total_students))
-perc_vhigh_before = np.nan_to_num(100*(counts_before["Very High"]/total_students))
-perc_vhigh_after = np.nan_to_num(100*(counts_after["Very High"]/total_students))
+print(total_students)
+perc_high_before = np.nan_to_num(100 * np.sum(guidelines_before >= 4) / total_students)
+perc_high_after = np.nan_to_num(100 * np.sum(guidelines_after >= 4) / total_students)
+perc_vhigh_before = np.nan_to_num(100 * np.sum(guidelines_before >= 5) / total_students)
+perc_vhigh_after = np.nan_to_num(100 * np.sum(guidelines_after >= 5) / total_students)
 
 #Figure 1: Scatter plot and lines
 
@@ -84,7 +97,7 @@ with st.container():
             "Guidelines Rating": ["Very Low", "Low", "Average", "High", "Very High"] * 2,
             "Counts": pd.concat([counts_before, counts_after]).reset_index(drop=True)
         })
-        data = data.dropna() # drop rows with NaN values
+        data = data.dropna()  # drop rows with NaN values
         data["Size"] = data["Counts"] * 10
         fig = px.scatter(data, x="When Education is Received", y="Guidelines Rating", size="Size",
                          color_discrete_sequence=[secondary_color], opacity=1,
