@@ -25,7 +25,7 @@ cleaned_form_names = [name.replace('test_', '').replace('_', ' ').title() for na
 
 form_name = st.sidebar.selectbox("Select Form Name", ['All'] + cleaned_form_names)
 
-st.sidebar.caption("Need more help? Refer to our documentation here")
+st.sidebar.caption("Need more help? Refer to our documentation [here](https://docs.google.com/document/d/19GpSxMp12O3dHoJHs6DARf3IpwtUShdqWRiDNICFZXI/edit?usp=sharing)")
 
 if form_name != 'All':
     formatted_form_name = f"test_{form_name.lower().replace(' ', '_')}"
