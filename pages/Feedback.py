@@ -82,6 +82,9 @@ st.markdown(f"""
         h1, h2, h3, h4 {{
             color: {primary_color};
         }}
+        .css-1qpc1ke a {{
+            color: {secondary_color};
+        }}
     </style>
 """, unsafe_allow_html=True)
 

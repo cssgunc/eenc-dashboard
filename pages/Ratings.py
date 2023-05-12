@@ -138,6 +138,9 @@ st.markdown(f"""
         button {{
             float: right;
         }}
+        .css-1qpc1ke a {{
+            color: {secondary_color};
+        }}
     </style>
 """, unsafe_allow_html=True)
 

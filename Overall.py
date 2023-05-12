@@ -349,7 +349,7 @@ st.markdown(f"""
         button {{
             float: right;
         }}
-        a {{
+        .css-1qpc1ke a {{
             color: {secondary_color};
         }}
     </style>
