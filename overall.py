@@ -90,7 +90,6 @@ def get_feedback_data(_db):
                     feedback_documents[key] = [document.to_dict()[key]]
 
         # Adds the dictionary to the feedback dictionary
-        print(collection.lower().replace(" ", "_", 1000))
         feedback_dic[collection.lower().replace(" ", "_", 1000)] = feedback_documents
     
     return feedback_dic

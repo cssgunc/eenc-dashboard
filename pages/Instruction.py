@@ -58,4 +58,3 @@ for collection in collections:
   feedback_dic[collection] = feedback_documents
 
 st.table(feedback_dic)
-print(feedback_dic)
