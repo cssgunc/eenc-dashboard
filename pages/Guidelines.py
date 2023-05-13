@@ -43,7 +43,7 @@ unique_locations = data['Student Location'].dropna().unique()
 unique_locations = np.where(unique_locations=="Mix of Areas", "A Mix of Areas", unique_locations)
 unique_locations = data['Student Location'].dropna().replace({'A Mix of Areas': 'Mix of Areas'}).unique()
 location = st.sidebar.radio("Student Location", ["All"] + list(unique_locations))
-st.sidebar.caption("Need more help? Refer to our documentation here")
+st.sidebar.caption("Need more help? Refer to our documentation [here](https://docs.google.com/document/d/19GpSxMp12O3dHoJHs6DARf3IpwtUShdqWRiDNICFZXI/edit?usp=sharing)")
 if location == "Mix of Areas":
     data_Mix = data[data["Student Location"] == location]
     data_AMix = data[data["Student Location"] == "A Mix of Areas"]
@@ -171,6 +171,9 @@ st.markdown(f"""
         }}
         h1, h2, h3, h4, h5, h6 {{
             color: {primary_color};
+        }}
+        .css-1qpc1ke a {{
+            color: {secondary_color};
         }}
     </style>
 """, unsafe_allow_html=True)

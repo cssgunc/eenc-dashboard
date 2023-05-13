@@ -123,10 +123,6 @@ data = data.replace('N/A', float('nan'))
 # logo
 st.image("assets/EENC-logo.png", width=100)
 
-st.title("Welcome to the EENC dashboard")
-st.markdown("This page displays overall information for the EENC courses. Use the filter on the left to customize the results.")
-st.markdown('---')
-
 primary_color = "#195E4C"
 secondary_color = "#3C9E8D"
 text_color = "#6D7183"
@@ -140,7 +136,11 @@ options = ["All"] + cleaned_form_names
 
 form_name = st.sidebar.selectbox("Select Form Name", options, options.index(st.session_state["formname"]))
 
-st.sidebar.caption("Need more help? Refer to our documentation here")
+st.title("Welcome to the EENC dashboard")
+st.markdown("This page displays overall information for the EENC courses. Use the filter on the left to customize the results.")
+st.markdown('---')
+
+st.sidebar.caption("Need more help? Refer to our documentation [here](https://docs.google.com/document/d/19GpSxMp12O3dHoJHs6DARf3IpwtUShdqWRiDNICFZXI/edit?usp=sharing)")
 
 if form_name != 'All':
     formatted_form_name = f"{form_name.lower().replace(' ', '_')}"
@@ -358,7 +358,7 @@ st.markdown(f"""
         button {{
             float: right;
         }}
-        a {{
+        .css-1qpc1ke a {{
             color: {secondary_color};
         }}
     </style>

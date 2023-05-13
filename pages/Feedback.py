@@ -27,7 +27,7 @@ options = ["All"] + cleaned_form_names
 
 form_name = st.sidebar.selectbox("Select Form Name", options, options.index(st.session_state["formname"]))
 
-st.sidebar.caption("Need more help? Refer to our documentation here")
+st.sidebar.caption("Need more help? Refer to our documentation [here](https://docs.google.com/document/d/19GpSxMp12O3dHoJHs6DARf3IpwtUShdqWRiDNICFZXI/edit?usp=sharing)")
 
 if form_name != 'All':
     formatted_form_name = f"{form_name.lower().replace(' ', '_')}"
@@ -85,6 +85,9 @@ st.markdown(f"""
         }}
         h1, h2, h3, h4 {{
             color: {primary_color};
+        }}
+        .css-1qpc1ke a {{
+            color: {secondary_color};
         }}
     </style>
 """, unsafe_allow_html=True)
