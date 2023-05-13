@@ -21,18 +21,22 @@ text_color = "#6D7183"
 # Sidebar
 st.sidebar.title("Filter")
 unique_form_names = sorted(data['Form Name'].unique())
-cleaned_form_names = [name.replace('test_', '').replace('_', ' ').title() for name in unique_form_names]
+cleaned_form_names = [name.replace('_', ' ').title() for name in unique_form_names]
 
-form_name = st.sidebar.selectbox("Select Form Name", ['All'] + cleaned_form_names)
+options = ["All"] + cleaned_form_names
+
+form_name = st.sidebar.selectbox("Select Form Name", options, options.index(st.session_state["formname"]))
 
 st.sidebar.caption("Need more help? Refer to our documentation here")
 
 if form_name != 'All':
-    formatted_form_name = f"test_{form_name.lower().replace(' ', '_')}"
+    formatted_form_name = f"{form_name.lower().replace(' ', '_')}"
     data = data[data['Form Name'] == formatted_form_name]
     feedback_data = feedback_data[formatted_form_name]
+    st.session_state["formname"] = form_name
 else:
     feedback_data = {k: v for d in feedback_data.values() for k, v in d.items()}
+    st.session_state["formname"] = "All"
 # Logo
 st.image("assets/EENC-logo.png", width=100)
 

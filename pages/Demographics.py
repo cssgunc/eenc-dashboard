@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import math
 
 # Set page title and favicon
 st.set_page_config(page_title="Demographics", page_icon="assets/EENC-logo.png", layout="wide")
@@ -30,15 +31,20 @@ st.markdown("---")
 #Sidebar
 st.sidebar.title("Filter")
 unique_form_names = sorted(data['Form Name'].unique())
-cleaned_form_names = [name.replace('test_', '').replace('_', ' ').title() for name in unique_form_names]
+cleaned_form_names = [name.replace('_', ' ').title() for name in unique_form_names]
 
-form_name = st.sidebar.selectbox("Select Form Name", ['All'] + cleaned_form_names)
+options = ["All"] + cleaned_form_names
+
+form_name = st.sidebar.selectbox("Select Form Name", options, options.index(st.session_state["formname"]))
 
 st.sidebar.caption("Need more help? Refer to our documentation here")
 
 if form_name != 'All':
-    formatted_form_name = f"test_{form_name.lower().replace(' ', '_')}"
+    formatted_form_name = f"{form_name.lower().replace(' ', '_')}"
     data = data[data['Form Name'] == formatted_form_name]
+    st.session_state["formname"] = form_name
+else:
+    st.session_state["formname"] = "All"
     
 
 #Profession
@@ -139,17 +145,18 @@ col2.metric("Largest student count", data['Student Count'].max())
 
 #relation between student count and course rating
 #data['Instructor Rating'] = data['Instructor Rating'].astype(int)
-course_rating = data['Instructor Rating']
-student_count_to_course_rating_fig = px.scatter(x=student_count, y=course_rating, labels=dict(x='Student Count',y='Instructor Rating'), color_discrete_sequence=[bar_color])
-
-
-student_count_to_course_rating_fig.update_xaxes(range=[-100,3200])
-student_count_to_course_rating_fig.update_yaxes(range=[0,5.2])
-student_count_to_course_rating_fig.update_traces(marker=dict(size=12, line=dict(width=1.5, color='Black')), selector=dict(mode='markers'))
 st.subheader('Correlation between Student-to-Instructor Ratio and Instructor Rating')
-st.caption("This scatterplot depicts how instructor ratings correspond to an instructor's student-to-instructor ratio, in order to determine how an instructor's abilities are affected by higher student counts.")
-st.caption('Please note that some outlier values are not depicted on the graph for better visibility.')
-st.plotly_chart(student_count_to_course_rating_fig)
+course_rating = data['Instructor Rating']
+if not math.isnan(course_rating.mean()):
+    student_count_to_course_rating_fig = px.scatter(x=student_count, y=course_rating, labels=dict(x='Student Count',y='Instructor Rating'), color_discrete_sequence=[bar_color])
+    student_count_to_course_rating_fig.update_xaxes(range=[-100,3200])
+    student_count_to_course_rating_fig.update_yaxes(range=[0,5.2])
+    student_count_to_course_rating_fig.update_traces(marker=dict(size=12, line=dict(width=1.5, color='Black')), selector=dict(mode='markers'))
+    st.caption("This scatterplot depicts how instructor ratings correspond to an instructor's student-to-instructor ratio, in order to determine how an instructor's abilities are affected by higher student counts.")
+    st.caption('Please note that some outlier values are not depicted on the graph for better visibility.')
+    st.plotly_chart(student_count_to_course_rating_fig)
+else:
+    st.write("No instructor ratings available.")
 
 
 #relation between location and course rating
@@ -206,13 +213,17 @@ location_ratings = {
     '5':[(mix_course_rating==5).sum(), (rural_course_rating==5).sum(), (suburban_course_rating==5).sum(), (urban_course_rating==5).sum()]
 }
 
-location_ratings_frame = pd.DataFrame(data=location_ratings)
-location_to_rating_bar_fig = px.bar(data_frame=location_ratings_frame, x='Student Location', y=['1', '2', '3', '4', '5'], color_discrete_sequence=other_bar_colors, text_auto=True)
-location_to_rating_bar_fig.update_layout(legend_title_text='Instructor Rating', yaxis_title='Number of Ratings')
 st.subheader('Correlation between Student Location and Instructor Rating')
-st.caption('This segmented bar graph depicts how instructor ratings differ based on student location. Each bar segement represents the number of instructors that received that particular rating value.')
-st.plotly_chart(location_to_rating_bar_fig)
 
+if not math.isnan(course_rating.mean()):
+    location_ratings_frame = pd.DataFrame(data=location_ratings)
+    location_to_rating_bar_fig = px.bar(data_frame=location_ratings_frame, x='Student Location', y=['1', '2', '3', '4', '5'], color_discrete_sequence=other_bar_colors, text_auto=True)
+    location_to_rating_bar_fig.update_layout(legend_title_text='Instructor Rating', yaxis_title='Number of Ratings') 
+    st.caption('This segmented bar graph depicts how instructor ratings differ based on student location. Each bar segement represents the number of instructors that received that particular rating value.')
+    st.plotly_chart(location_to_rating_bar_fig)
+
+else:
+    st.write("No instructor ratings available.")
 
 # Add CSS to customize text colors
 st.markdown(f"""

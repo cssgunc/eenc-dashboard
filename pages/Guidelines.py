@@ -18,17 +18,25 @@ data = st.session_state['master_data']
 
 st.image("assets/EENC-logo.png", width = 100)
 unique_form_names = sorted(data['Form Name'].unique())
-cleaned_form_names = [name.replace('test_', '').replace('_', ' ').title() for name in unique_form_names]
+cleaned_form_names = [name.replace('_', ' ').title() for name in unique_form_names]
 
 
 
 # sidebar
 st.sidebar.title("Filters")
-form_name = st.sidebar.selectbox("Select Form Name", ['All'] + cleaned_form_names)
+
+options = ["All"] + cleaned_form_names
+
+form_name = st.sidebar.selectbox("Select Form Name", options, options.index(st.session_state["formname"]))
+
 # Filter the data
 if form_name != 'All': #event name
-    formatted_form_name = f"test_{form_name.lower().replace(' ', '_')}"
+    formatted_form_name = f"{form_name.lower().replace(' ', '_')}"
     data = data[data['Form Name'] == formatted_form_name]
+    st.session_state["formname"] = form_name
+else:
+    st.session_state["formname"] = "All"
+
 # Get unique locations and remove "None"
 unique_locations = data['Student Location'].dropna().unique()
 # Group "Mix of Areas" and "A Mix of Areas"
@@ -77,7 +85,6 @@ st.markdown("")
 
 #calculate stats
 total_students = len(guidelines_after)
-print(total_students)
 perc_high_before = np.nan_to_num(100 * np.sum(guidelines_before >= 4) / total_students)
 perc_high_after = np.nan_to_num(100 * np.sum(guidelines_after >= 4) / total_students)
 perc_vhigh_before = np.nan_to_num(100 * np.sum(guidelines_before >= 5) / total_students)

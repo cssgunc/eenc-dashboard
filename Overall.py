@@ -90,12 +90,9 @@ def get_feedback_data(_db):
                     feedback_documents[key] = [document.to_dict()[key]]
 
         # Adds the dictionary to the feedback dictionary
-        print(collection.lower().replace(" ", "_", 1000))
         feedback_dic[collection.lower().replace(" ", "_", 1000)] = feedback_documents
     
     return feedback_dic
-
-
 
 # Set page title and favicon
 st.set_page_config(page_title="Homepage", page_icon="assets/EENC-logo.png", layout="wide")
@@ -107,8 +104,12 @@ st.session_state["database_connection"] = get_database(key_dict)
 # Sets the master data state
 st.session_state["master_data"] = get_data(st.session_state["database_connection"])
 
-#Sets the feedback data state
+# Sets the feedback data state
 st.session_state["feedback_data"] = get_feedback_data(st.session_state["database_connection"])
+
+# Sets the dropdown state
+if "formname" not in st.session_state:
+    st.session_state["formname"] = "All"
 
 # Load the data
 # Data from Streamlit state
@@ -133,15 +134,20 @@ text_color = "#6D7183"
 # Sidebar
 st.sidebar.title("Filters")
 unique_form_names = sorted(data['Form Name'].unique())
-cleaned_form_names = [name.replace('test_', '').replace('_', ' ').title() for name in unique_form_names]
+cleaned_form_names = [name.replace('_', ' ').title() for name in unique_form_names]
 
-form_name = st.sidebar.selectbox("Select Form Name", ['All'] + cleaned_form_names)
+options = ["All"] + cleaned_form_names
+
+form_name = st.sidebar.selectbox("Select Form Name", options, options.index(st.session_state["formname"]))
 
 st.sidebar.caption("Need more help? Refer to our documentation here")
 
 if form_name != 'All':
-    formatted_form_name = f"test_{form_name.lower().replace(' ', '_')}"
+    formatted_form_name = f"{form_name.lower().replace(' ', '_')}"
     data = data[data['Form Name'] == formatted_form_name]
+    st.session_state["formname"] = form_name
+else:
+    st.session_state["formname"] = "All"
 
 
 # Check that this translates over guidelines qualitative values to quantitative
@@ -221,7 +227,10 @@ with c2:
 
 course_rating_mean = data['Course Rating'].mean()
 instructor_rating_mean = data['Instructor Rating'].mean()
-accessibility_rating_mean = data['Accessibility Rating'].mean()
+try:
+    accessibility_rating_mean = data['Accessibility Rating'].mean()
+except:
+    print(data["Accessibility Rating"])
 navigation_rating_mean = data['Navigation Rating'].mean()
 
 num_cols = 0
